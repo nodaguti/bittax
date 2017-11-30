@@ -4,7 +4,7 @@ import persistState from 'redux-localstorage';
 import { createLogger } from 'redux-logger';
 import { Iterable } from 'immutable';
 import transit from 'transit-immutable-js';
-import reducers from '../../redux/reducers';
+import * as reducers from '../reducers';
 import * as records from '../records';
 
 const recordTransit = transit.withRecords([
