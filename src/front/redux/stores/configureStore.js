@@ -1,19 +1,17 @@
-import { compose, applyMiddleware, createStore, combineReducers } from 'redux';
-import thunk from 'redux-thunk';
-import persistState from 'redux-localstorage';
-import { createLogger } from 'redux-logger';
 import { Iterable } from 'immutable';
-import transit from 'transit-immutable-js';
+import { compose, applyMiddleware, createStore, combineReducers } from 'redux';
+import { persistStore, persistReducer } from 'redux-persist';
+import immutableTransform from 'redux-persist-transform-immutable';
+import storage from 'redux-persist/es/storage';
+import thunk from 'redux-thunk';
+import { createLogger } from 'redux-logger';
 import * as reducers from '../reducers';
 import * as records from '../records';
 
-const recordTransit = transit.withRecords([
-  ...records,
-]);
-
-const localStorageConfig = {
-  serialize: (subset) => recordTransit.toJSON(subset),
-  deserialize: (serializedData) => recordTransit.fromJSON(serializedData),
+const persistConfig = {
+  transforms: [immutableTransform({ records: [...records] })],
+  key: 'root',
+  storage,
 };
 
 const stateTransformer = (state) => {
@@ -36,12 +34,13 @@ export default function configureStore(initialState = {}) {
     middlewares.push(logger);
   }
 
-  const createPersistentStore = compose(
-    persistState(null, localStorageConfig),
-    applyMiddleware(...middlewares),
-  )(createStore);
+  const reducer = combineReducers(reducers);
+  const persistedReducer = persistReducer(persistConfig, reducer);
+  const store = createStore(
+    persistedReducer,
+    initialState,
+    compose(applyMiddleware(...middlewares)),
+  );
 
-  const rootReducer = combineReducers(reducers);
-
-  return createPersistentStore(rootReducer, initialState);
+  return persistStore(store);
 }
