@@ -1,15 +1,5 @@
 import camelCase from 'camel-case';
-import { Record } from 'immutable';
-
-const ImmutableError = new Record({
-  name: '',
-  message: '',
-  details: {
-    name: '',
-    message: '',
-    stack: '',
-  },
-}, 'error');
+import { ImmutableError } from '../records';
 
 const ACTIONS_MAP = {
   emitError(state, {
@@ -32,6 +22,3 @@ export default function resources(state = initialState, { type, payload }) {
 
   return (reducer) ? reducer(state, payload) : state;
 }
-
-// For transit-immutable-js
-export const records = [ImmutableError];
