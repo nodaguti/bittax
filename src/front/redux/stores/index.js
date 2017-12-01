@@ -1,5 +1,5 @@
 import { Iterable } from 'immutable';
-import { compose, applyMiddleware, createStore, combineReducers } from 'redux';
+import { applyMiddleware, createStore, combineReducers } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import immutableTransform from 'redux-persist-transform-immutable';
 import storage from 'redux-persist/es/storage';
@@ -41,7 +41,7 @@ export default function configureStore(initialState = {}) {
   const store = createStore(
     persistedReducer,
     initialState,
-    compose(applyMiddleware(...middlewares)),
+    applyMiddleware(...middlewares),
   );
 
   saga.run(rootSaga);
