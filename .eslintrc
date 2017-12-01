@@ -1,0 +1,12 @@
+{
+  "root": true,
+  "extends": "airbnb",
+  "parser": "babel-eslint",
+  "settings": {
+    "import/resolver": "webpack"
+  },
+  "rules": {
+    "arrow-parens": ["error", "always"],
+    "react/prop-types": 0
+  }
+}
