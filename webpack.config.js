@@ -13,12 +13,14 @@ const babelLoaderQuery = {
       {
         targets: {
           browsers: [
+            '> 5%',
             'last 1 version',
             'not ie <= 11',
             'not ie_mob <= 11',
-            'not Android <= 56',
+            'not Android <= 999',
           ],
         },
+        useBuiltIns: 'usage',
         modules: false,
         debug: true,
       },
@@ -28,7 +30,6 @@ const babelLoaderQuery = {
   plugins: [
     'transform-object-rest-spread',
     'transform-class-properties',
-    'transform-runtime',
   ],
 };
 
