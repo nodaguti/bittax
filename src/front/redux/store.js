@@ -5,12 +5,14 @@ import immutableTransform from 'redux-persist-transform-immutable';
 import storage from 'redux-persist/es/storage';
 import createSagaMiddleware from 'redux-saga';
 import { createLogger } from 'redux-logger';
-import * as reducers from '../reducers';
-import * as records from '../records';
-import rootSaga from '../sagas';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import * as reducers from './reducers';
+import * as records from './records';
+import rootSaga from './sagas';
+import { rehydrationCompleted } from './actions';
 
 const persistConfig = {
-  transforms: [immutableTransform({ records: [...records] })],
+  transforms: [immutableTransform({ records: Object.values(records) })],
   key: 'root',
   storage,
 };
@@ -41,10 +43,14 @@ export default function configureStore(initialState = {}) {
   const store = createStore(
     persistedReducer,
     initialState,
-    applyMiddleware(...middlewares),
+    composeWithDevTools(applyMiddleware(...middlewares)),
   );
 
   saga.run(rootSaga);
 
-  return persistStore(store);
+  const persistor = persistStore(store, initialState, () => {
+    store.dispatch(rehydrationCompleted());
+  });
+
+  return { persistor, store };
 }

@@ -1,9 +1,11 @@
 import React from 'react';
 import { render } from 'react-dom';
 import Root from './containers/Root';
-import configureStore from './redux/stores';
+import configureStore from './redux/store';
+
+const { persistor, store } = configureStore();
 
 render(
-  <Root store={configureStore()} />,
+  <Root store={store} persistor={persistor} />,
   document.getElementById('root'),
 );

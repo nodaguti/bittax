@@ -1,25 +1,64 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/es/integration/react';
 import {
   BrowserRouter as Router,
   Route,
   Switch,
 } from 'react-router-dom';
+import RouteChangedHandler from '../containers/RouteChangedHandler';
 import Header from '../containers/Header';
 import Container from '../components/Container';
 import Home from '../containers/Home';
+import SourceListToAdd from '../containers/SourceListToAdd';
+import SourceImporter from '../containers/SourceImporter';
+import ApiIntegrator from '../containers/ApiIntegrator';
+import OAuthRedirectHandler from '../containers/OAuthRedirectHandler';
 
-const Root = ({ store }) => (
+const Root = ({ persistor, store }) => (
   <Provider store={store}>
-    <Router>
-      <Header />
+    <PersistGate persistor={persistor}>
+      <Router>
+        <div>
+          <Route component={RouteChangedHandler} />
 
-      <Container>
-        <Switch>
-          <Route exact path="/" component={Home} />
-        </Switch>
-      </Container>
-    </Router>
+          <Header />
+
+          <Container>
+            <Switch>
+              <Route
+                path="/"
+                exact
+                strict
+                component={Home}
+              />
+              <Route
+                path="/source/add"
+                exact
+                strict
+                component={SourceListToAdd}
+              />
+              <Route
+                path="/source/add/:provider"
+                exact
+                strict
+                component={SourceImporter}
+              />
+              <Route
+                path="/integrate/api/:provider"
+                exact
+                strict
+                component={ApiIntegrator}
+              />
+              <Route
+                path="/oauth/:provider"
+                component={OAuthRedirectHandler}
+              />
+            </Switch>
+          </Container>
+        </div>
+      </Router>
+    </PersistGate>
   </Provider>
 );
 
