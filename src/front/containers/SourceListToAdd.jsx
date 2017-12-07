@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import chunk from 'lodash.chunk';
+import { chunk } from 'lodash-es';
 import {
   Grid,
   Row,
