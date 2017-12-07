@@ -178,7 +178,9 @@ class PrivateAPI {
     const histories = await Promise.all(promises);
 
     histories.forEach((history, idx) => {
-      results.set(pairs[idx], history);
+      if (history.length > 0) {
+        results.set(pairs[idx], history);
+      }
     });
 
     return results;
