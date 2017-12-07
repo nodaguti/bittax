@@ -4,18 +4,26 @@ import { ImmutableError } from '../records';
 const initialState = null;
 
 const reducers = {
-  [EMIT_MASKED_ERROR]: (state, {
-    name, message, stack, details,
-  }) => (
-    new ImmutableError({
-      name, message, stack, details,
-    })
-  ),
+  [EMIT_MASKED_ERROR](state, {
+    name, message, details,
+  }) {
+    return new ImmutableError({
+      name,
+      message,
+      details: {
+        name: details.name,
+        message: details.message,
+        stack: details.stack,
+      },
+    });
+  },
 
-  [CLEAR_ERROR]: () => null,
+  [CLEAR_ERROR]() {
+    return null;
+  },
 };
 
-export default function resources(state = initialState, { type, payload }) {
+export default function error(state = initialState, { type, payload }) {
   const reducer = reducers[type];
   return (reducer) ? reducer(state, payload) : state;
 }
