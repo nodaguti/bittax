@@ -7,6 +7,7 @@ import {
   Switch,
 } from 'react-router-dom';
 import RouteChangedHandler from '../containers/RouteChangedHandler';
+import Error from '../containers/Error';
 import Header from '../containers/Header';
 import Container from '../components/Container';
 import Home from '../containers/Home';
@@ -25,6 +26,8 @@ const Root = ({ persistor, store }) => (
           <Header />
 
           <Container>
+            <Error />
+
             <Switch>
               <Route
                 path="/"

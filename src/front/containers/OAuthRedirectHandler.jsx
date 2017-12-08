@@ -1,49 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Panel, Alert } from 'react-bootstrap';
-import { oAuthPopupRedirected } from '../redux/actions';
-
-const mapStateToProps = (state) => ({
-  error: state.error,
-});
+import { Panel } from 'react-bootstrap';
+import {
+  oAuthPopupRedirected,
+  emitError,
+} from '../redux/actions';
 
 class OAuthRedirectHandler extends Component {
-  renderError = ({ name, message, details }) => {
-    if (process.env.NODE_ENV === 'development' && details) {
-      return (
-        <Alert bsStyle="danger">
-          <h4>{name}</h4>
-          <p>{message}</p>
-          <p>
-            <Panel header="Error Details">
-              <thead>
-                <tr><td>Prop</td><td>Value</td></tr>
-              </thead>
-              <tbody>
-                <tr><td>name</td><td>{details.name}</td></tr>
-                <tr><td>message</td><td>{details.message}</td></tr>
-                <tr><td>stack</td><td><pre>{details.stack}</pre></td></tr>
-              </tbody>
-            </Panel>
-          </p>
-        </Alert>
-      );
-    }
-
-    return (
-      <Alert bsStyle="danger">
-        <h4>{name}</h4>
-        <p>{message}</p>
-      </Alert>
-    );
-  }
-
-  render() {
-    const { error, match, dispatch } = this.props;
-
-    if (error) {
-      return this.renderError(error);
-    }
+  componentDidMount() {
+    const { match, dispatch } = this.props;
 
     try {
       const queries = new URLSearchParams(window.location.search);
@@ -52,20 +17,22 @@ class OAuthRedirectHandler extends Component {
       const { provider } = match.params;
 
       dispatch(oAuthPopupRedirected({ code, state, provider }));
-
-      return (
-        <Panel>
-          認証情報を保存して、操作していたウィンドウに戻る処理を行っています...
-        </Panel>
-      );
     } catch (ex) {
-      return this.renderError({
+      dispatch(emitError({
         name: '認証エラー',
         message: '認証情報の受信に失敗しました．もう一度認証をやり直してください．',
         details: ex,
-      });
+      }));
     }
+  }
+
+  render() {
+    return (
+      <Panel>
+        認証情報を保存して、操作していたウィンドウに戻る処理を行っています...
+      </Panel>
+    );
   }
 }
 
-export default connect(mapStateToProps)(OAuthRedirectHandler);
+export default connect()(OAuthRedirectHandler);
