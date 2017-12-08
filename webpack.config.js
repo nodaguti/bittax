@@ -44,13 +44,6 @@ module.exports = {
 
   devtool: process.env.NODE_ENV === 'development' ? 'source-map' : '',
 
-  devServer: {
-    contentBase: path.join(__dirname, 'dist'),
-    publicPath: '/assets/',
-    compress: true,
-    historyApiFallback: true,
-  },
-
   resolve: {
     extensions: [
       '.js',
