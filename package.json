@@ -6,6 +6,7 @@
   "author": "nodaguti <nodaguti@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "bootstrap-honoka": "^3.3.7-a",
     "bottleneck": "^1.16.0",
     "camel-case": "^3.0.0",
     "fetch-check-http-status": "^2.0.0",
@@ -66,7 +67,9 @@
     "build:server": "babel src/server --out-dir lib --source-maps",
     "build:client": "webpack --config webpack.config.js --progress --display-error-details --display-optimization-bailout",
     "clean": "rimraf lib dist",
-    "copy": "cpr index.html dist/",
+    "copy": "npm-run-all copy:*",
+    "copy:index": "cpr index.html dist/",
+    "copy:css": "cpr node_modules/bootstrap-honoka/dist/ dist/assets/bootstrap-honoka/",
     "lint": "eslint src/**/*.{js,jsx}",
     "start": "npm-run-all start:server",
     "start:server": "node lib/server.js"

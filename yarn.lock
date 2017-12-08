@@ -1211,6 +1211,10 @@ boom@5.x.x:
   dependencies:
     hoek "4.x.x"
 
+bootstrap-honoka@^3.3.7-a:
+  version "3.3.7-a"
+  resolved "https://registry.yarnpkg.com/bootstrap-honoka/-/bootstrap-honoka-3.3.7-a.tgz#7182fa3f9b0fe38336e4c9ff6d43f6d8f99bb27a"
+
 bottleneck@^1.16.0:
   version "1.16.0"
   resolved "https://registry.yarnpkg.com/bottleneck/-/bottleneck-1.16.0.tgz#d6ce13808527afc80b69092f15606655e5b21f1a"
