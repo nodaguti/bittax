@@ -5,19 +5,19 @@ import storage from 'redux-persist/es/storage';
 import * as records from '../records';
 import oauth from './oauth';
 import transaction from './transaction';
-import notification from './notification';
+import notifications from './notifications';
 import error from './error';
 
 const persistConfig = {
   transforms: [immutableTransform({ records: Object.values(records) })],
   key: 'root',
   storage,
-  blacklist: ['error', 'notification'],
+  blacklist: ['error', 'notifications'],
 };
 
 export default persistReducer(persistConfig, combineReducers({
   oauth,
   transaction,
-  notification,
+  notifications,
   error,
 }));

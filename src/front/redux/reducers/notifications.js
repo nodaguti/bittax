@@ -26,7 +26,7 @@ const reducers = {
   },
 };
 
-export default function notification(state = initialState, { type, payload }) {
+export default function notifications(state = initialState, { type, payload }) {
   const reducer = reducers[type];
   return (reducer) ? reducer(state, payload) : state;
 }
