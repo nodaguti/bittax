@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import RouteChangedHandler from '../containers/RouteChangedHandler';
 import Error from '../containers/Error';
+import NotificationList from '../containers/NotificationList';
 import Header from '../containers/Header';
 import Container from '../components/Container';
 import Home from '../containers/Home';
@@ -23,6 +24,7 @@ const App = () => (
 
       <Container>
         <Error />
+        <NotificationList />
 
         <Switch>
           <Route

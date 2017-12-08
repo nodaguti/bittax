@@ -21,6 +21,13 @@ export const FETCH_TRADES_OF_ALL_PAIRS = 'FETCH_TRADES_OF_ALL_PAIRS';
 export const transactionsFetched = createAction(TRANSACTIONS_FETCHED);
 export const fetchTradesOfAllPairs = createAction(FETCH_TRADES_OF_ALL_PAIRS);
 
+export const APPEND_NOTIFICATION = 'APPEND_NOTIFICATION';
+export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION';
+export const REMOVE_NOTIFICATIONS = 'REMOVE_NOTIFICATIONS';
+export const appendNotification = createAction(APPEND_NOTIFICATION);
+export const removeNotification = createAction(REMOVE_NOTIFICATION);
+export const removeNotifications = createAction(REMOVE_NOTIFICATIONS);
+
 export const EMIT_ERROR = 'EMIT_ERROR';
 export const EMIT_MASKED_ERROR = 'EMIT_MASKED_ERROR';
 export const CLEAR_ERROR = 'CLEAR_ERROR';

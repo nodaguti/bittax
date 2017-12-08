@@ -10,6 +10,14 @@ export const ImmutableError = new Record({
   },
 }, 'error');
 
+export const Notification = new Record({
+  id: '',
+  type: 'info', // same as <Alert>'s bsStyle of react-bootstrap
+  message: '',
+  removable: true,
+  ephemeral: true, // if true, automatically removed when the route is changed
+}, 'notification');
+
 export const OAuthToken = new Record({
   provider: '',
   token: '',
