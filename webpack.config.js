@@ -57,6 +57,10 @@ module.exports = {
     ],
   },
 
+  externals: {
+    bluebird: 'bluebird',
+  },
+
   module: {
     rules: [
       {
