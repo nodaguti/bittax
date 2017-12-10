@@ -28,6 +28,13 @@ export const appendNotification = createAction(APPEND_NOTIFICATION);
 export const removeNotification = createAction(REMOVE_NOTIFICATION);
 export const removeNotifications = createAction(REMOVE_NOTIFICATIONS);
 
+export const APPEND_ACTIVITY = 'APPEND_ACTIVITY';
+export const UPDATE_ACTIVITY = 'UPDATE_ACTIVITY';
+export const REMOVE_ACTIVITY = 'REMOVE_ACTIVITY';
+export const appendActivity = createAction(APPEND_ACTIVITY);
+export const updateActivity = createAction(UPDATE_ACTIVITY);
+export const removeActivity = createAction(REMOVE_ACTIVITY);
+
 export const EMIT_ERROR = 'EMIT_ERROR';
 export const EMIT_MASKED_ERROR = 'EMIT_MASKED_ERROR';
 export const CLEAR_ERROR = 'CLEAR_ERROR';

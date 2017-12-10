@@ -5,12 +5,20 @@ import {
   emitError,
 } from '../actions';
 import APIs from '../../api';
+import fetchWithRequestHandling from './utils/progress';
 
 function* callTradesOfAllPairs({ payload: { provider, since = 0 } }) {
   const api = APIs[provider];
+  const activityId = `${provider}-${Date.now()}`;
 
   try {
-    const results = yield call([api.private, 'fetchTradesOfAllPairs'], { provider, since });
+    const results = yield call(
+      fetchWithRequestHandling,
+      { id: activityId, title: `${provider} の取引履歴取得` },
+      [api.private, 'fetchTradesOfAllPairs'],
+      { since },
+    );
+
     yield put(transactionsFetched({ provider, transactionsMap: results }));
   } catch (ex) {
     yield put(emitError({

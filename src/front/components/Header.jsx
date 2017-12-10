@@ -5,12 +5,20 @@ import {
   Glyphicon,
   OverlayTrigger,
   Tooltip,
+  Popover,
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Link } from 'react-router-dom';
+import ActivityList from '../containers/ActivityList';
 
-const tooltip = (
+const sourceAddTooltip = (
   <Tooltip>各取引所の取引データを追加</Tooltip>
+);
+
+const activityListPopover = (
+  <Popover id="activity-list-popover">
+    <ActivityList />
+  </Popover>
 );
 
 const Header = () => (
@@ -22,12 +30,17 @@ const Header = () => (
     </Navbar.Header>
     <Navbar.Collapse>
       <Navbar.Form pullRight>
-        <OverlayTrigger placement="bottom" overlay={tooltip}>
+        <OverlayTrigger placement="bottom" overlay={sourceAddTooltip}>
           <LinkContainer to="/source/add" activeClassName="">
             <Button bsStyle="primary">
               <Glyphicon glyph="plus" />
             </Button>
           </LinkContainer>
+        </OverlayTrigger>
+        <OverlayTrigger trigger="click" placement="bottom" overlay={activityListPopover}>
+          <Button>
+            <Glyphicon glyph="tasks" />
+          </Button>
         </OverlayTrigger>
       </Navbar.Form>
     </Navbar.Collapse>

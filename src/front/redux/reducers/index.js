@@ -6,18 +6,20 @@ import * as records from '../records';
 import oauth from './oauth';
 import transaction from './transaction';
 import notifications from './notifications';
+import activities from './activities';
 import error from './error';
 
 const persistConfig = {
   transforms: [immutableTransform({ records: Object.values(records) })],
   key: 'root',
   storage,
-  blacklist: ['error', 'notifications'],
+  blacklist: ['error', 'notifications', 'activities'],
 };
 
 export default persistReducer(persistConfig, combineReducers({
   oauth,
   transaction,
   notifications,
+  activities,
   error,
 }));

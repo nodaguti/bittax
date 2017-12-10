@@ -7,7 +7,7 @@ import {
 import RouteChangedHandler from '../containers/RouteChangedHandler';
 import Error from '../containers/Error';
 import NotificationList from '../containers/NotificationList';
-import Header from '../containers/Header';
+import Header from '../components/Header';
 import Container from '../components/Container';
 import Home from '../containers/Home';
 import SourceListToAdd from '../containers/SourceListToAdd';

@@ -1,3 +1,4 @@
+import { EventEmitter } from 'events';
 import Bottleneck from 'bottleneck';
 import uuidv4 from 'uuid/v4';
 import { merge } from 'lodash-es';
@@ -161,29 +162,53 @@ class PrivateAPI {
       });
   }
 
-  async fetchTradesOfAllPairs({ since = 0 }) {
+  fetchTradesOfAllPairs({ since = 0 }) {
     if (!this.token) {
       throw new Error('Available token is needed.');
     }
 
-    const pairs = await PublicAPI.fetchCurrencyPairs();
-    const results = new Map();
+    // We use EventEmitter to provide progress information.
+    // async/await is not very useful here as it is for returning a value only once.
+    // Streams API could be another option but its usage is rather
+    // creating a large consistent data flow, whereas we want to return
+    // two different types of data: request progress and fetched data.
+    const emitter = new EventEmitter();
 
-    const promises = pairs.map((pair) => this.fetchTrades({
-      token: this.token,
-      since,
-      currencyPair: pair,
-    }));
+    (async () => {
+      try {
+        const pairs = await PublicAPI.fetchCurrencyPairs();
+        const total = pairs.length;
+        let done = 0;
 
-    const histories = await Promise.all(promises);
+        emitter.emit('progress', { done, total });
 
-    histories.forEach((history, idx) => {
-      if (history.length > 0) {
-        results.set(pairs[idx], history);
+        const promises = pairs.map((pair) => this.fetchTrades({
+          token: this.token,
+          since,
+          currencyPair: pair,
+        }).then((data) => {
+          done += 1;
+          emitter.emit('progress', { done, total });
+
+          return data;
+        }));
+
+        const histories = await Promise.all(promises);
+        const results = new Map();
+
+        histories.forEach((history, idx) => {
+          if (history.length > 0) {
+            results.set(pairs[idx], history);
+          }
+        });
+
+        emitter.emit('end', results);
+      } catch (ex) {
+        emitter.emit('error', ex);
       }
-    });
+    })();
 
-    return results;
+    return emitter;
   }
 }
 

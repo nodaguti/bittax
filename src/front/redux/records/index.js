@@ -18,6 +18,14 @@ export const Notification = new Record({
   ephemeral: true, // if true, automatically removed when the route is changed
 }, 'notification');
 
+export const Activity = new Record({
+  id: '',
+  title: '',
+  description: '',
+  total: 0,
+  done: 0,
+}, 'activity');
+
 export const OAuthToken = new Record({
   provider: '',
   token: '',
