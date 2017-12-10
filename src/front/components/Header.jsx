@@ -31,7 +31,7 @@ const Header = () => (
     <Navbar.Collapse>
       <Navbar.Form pullRight>
         <OverlayTrigger placement="bottom" overlay={sourceAddTooltip}>
-          <LinkContainer to="/source/add" activeClassName="">
+          <LinkContainer to="/sources" activeClassName="">
             <Button bsStyle="primary">
               <Glyphicon glyph="plus" />
             </Button>

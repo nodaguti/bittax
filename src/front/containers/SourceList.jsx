@@ -15,7 +15,7 @@ const mapStateToProps = (state) => ({
   oauth: state.oauth,
 });
 
-class SourceListToAdd extends Component {
+class SourceList extends Component {
   renderOAuthButton(id) {
     const {
       oauth,
@@ -60,7 +60,7 @@ class SourceListToAdd extends Component {
     return (
       <Button
         block
-        onClick={() => history.push(`/source/add/${id}`)}
+        onClick={() => history.push(`/sources/add/${id}`)}
       >
         CSV ファイルからデータ読み込み
       </Button>
@@ -115,4 +115,4 @@ class SourceListToAdd extends Component {
   }
 }
 
-export default connect(mapStateToProps)(SourceListToAdd);
+export default connect(mapStateToProps)(SourceList);

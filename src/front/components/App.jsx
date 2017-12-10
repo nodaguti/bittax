@@ -10,7 +10,7 @@ import NotificationList from '../containers/NotificationList';
 import Header from '../components/Header';
 import Container from '../components/Container';
 import Home from '../containers/Home';
-import SourceListToAdd from '../containers/SourceListToAdd';
+import SourceList from '../containers/SourceList';
 import SourceImporter from '../containers/SourceImporter';
 import ApiIntegrator from '../containers/ApiIntegrator';
 import OAuthRedirectHandler from '../containers/OAuthRedirectHandler';
@@ -34,13 +34,13 @@ const App = () => (
             component={Home}
           />
           <Route
-            path="/source/add"
+            path="/sources"
             exact
             strict
-            component={SourceListToAdd}
+            component={SourceList}
           />
           <Route
-            path="/source/add/:provider"
+            path="/sources/add/:provider"
             exact
             strict
             component={SourceImporter}
