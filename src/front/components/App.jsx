@@ -11,7 +11,7 @@ import {
 import RouteChangedHandler from '../containers/RouteChangedHandler';
 import Error from '../containers/Error';
 import NotificationList from '../containers/NotificationList';
-import Header from '../components/Header';
+import Navbar from '../components/Navbar';
 import Home from '../containers/Home';
 import SourceList from '../containers/SourceList';
 import SourceImporter from '../containers/SourceImporter';
@@ -29,7 +29,7 @@ const App = () => (
       <div>
         <Route component={RouteChangedHandler} />
 
-        <Header />
+        <Navbar />
 
         <Container>
           <Error />

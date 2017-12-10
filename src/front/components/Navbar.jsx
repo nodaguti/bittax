@@ -13,7 +13,7 @@ import BottomTooltip from './BottomTooltip';
 import ToolbarIcon from './ToolbarIcon';
 import ActivityPanelPopover from '../containers/ActivityPanelPopover';
 
-const MobileHeader = () => (
+const MobileNavbar = () => (
   <Toolbar>
     <LinkContainer to="/">
       <NavLink f={4}>Bittax</NavLink>
@@ -45,7 +45,7 @@ const MobileHeader = () => (
   </Toolbar>
 );
 
-const NormalHeader = () => (
+const NormalNavbar = () => (
   <Toolbar>
     <LinkContainer to="/">
       <NavLink f={4}>Bittax</NavLink>
@@ -79,18 +79,18 @@ const NormalHeader = () => (
   </Toolbar>
 );
 
-const Header = () => (
+const Navbar = () => (
   <div>
     {/* For xs screens */}
     <Hide sm md lg>
-      <MobileHeader />
+      <MobileNavbar />
     </Hide>
 
     {/* For other screens */}
     <Hide xs>
-      <NormalHeader />
+      <NormalNavbar />
     </Hide>
   </div>
 );
 
-export default Header;
+export default Navbar;
