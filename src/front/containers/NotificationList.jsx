@@ -22,7 +22,7 @@ const NotificationList = ({ notifications, dispatch }) => (
     ) : (
       <NotificationPanel key={id} {...{ type, message }} />
     );
-  })
+  }).valueSeq().toArray()
 );
 
 export default connect(mapStateToProps)(NotificationList);
