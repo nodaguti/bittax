@@ -10,7 +10,7 @@ const initialState = new Map();
 
 const reducers = {
   [APPEND_NOTIFICATION](state, {
-    id, type, message, removable = true, ephemeral = true,
+    id, type = 'info', message, removable = true, ephemeral = true,
   }) {
     return state.set(id, new Notification({
       id, type, message, removable, ephemeral,
