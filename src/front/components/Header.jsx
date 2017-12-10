@@ -1,50 +1,47 @@
 import React from 'react';
 import {
-  Navbar,
-  Button,
-  Glyphicon,
-  OverlayTrigger,
-  Tooltip,
-  Popover,
-} from 'react-bootstrap';
+  Toolbar,
+  NavLink,
+  Text,
+} from 'rebass';
+import FaPlus from 'react-icons/lib/fa/plus';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Link } from 'react-router-dom';
-import ActivityList from '../containers/ActivityList';
-
-const sourceAddTooltip = (
-  <Tooltip>各取引所の取引データを追加</Tooltip>
-);
-
-const activityListPopover = (
-  <Popover id="activity-list-popover">
-    <ActivityList />
-  </Popover>
-);
+import BottomTooltip from './BottomTooltip';
+import ToolbarIcon from './ToolbarIcon';
+import ActivityPanelPopover from '../containers/ActivityPanelPopover';
 
 const Header = () => (
-  <Navbar inverse>
-    <Navbar.Header>
-      <Navbar.Brand>
-        <Link href="/" to="/">Bittax</Link>
-      </Navbar.Brand>
-    </Navbar.Header>
-    <Navbar.Collapse>
-      <Navbar.Form pullRight>
-        <OverlayTrigger placement="bottom" overlay={sourceAddTooltip}>
-          <LinkContainer to="/sources" activeClassName="">
-            <Button bsStyle="primary">
-              <Glyphicon glyph="plus" />
-            </Button>
-          </LinkContainer>
-        </OverlayTrigger>
-        <OverlayTrigger trigger="click" placement="bottom" overlay={activityListPopover}>
-          <Button>
-            <Glyphicon glyph="tasks" />
-          </Button>
-        </OverlayTrigger>
-      </Navbar.Form>
-    </Navbar.Collapse>
-  </Navbar>
+  <Toolbar>
+    <LinkContainer to="/">
+      <NavLink f={4}>Bittax</NavLink>
+    </LinkContainer>
+    <LinkContainer to="/dashboard">
+      <NavLink>
+        ダッシュボード
+      </NavLink>
+    </LinkContainer>
+    <LinkContainer to="/">
+      <NavLink>
+        取引履歴
+      </NavLink>
+    </LinkContainer>
+    <LinkContainer to="/sources">
+      <NavLink>
+        取引所一覧
+      </NavLink>
+    </LinkContainer>
+
+    <LinkContainer to="/sources">
+      <BottomTooltip text="取引所のデータを追加" ml="auto">
+        <NavLink>
+          <ToolbarIcon><FaPlus color="white" /></ToolbarIcon>
+        </NavLink>
+      </BottomTooltip>
+    </LinkContainer>
+    <NavLink>
+      <ActivityPanelPopover />
+    </NavLink>
+  </Toolbar>
 );
 
 export default Header;

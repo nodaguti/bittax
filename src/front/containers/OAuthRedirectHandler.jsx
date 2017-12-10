@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Panel } from 'react-bootstrap';
+import {
+  Panel,
+  Box,
+} from 'rebass';
 import {
   oAuthPopupRedirected,
   emitError,
@@ -28,8 +31,10 @@ class OAuthRedirectHandler extends Component {
 
   render() {
     return (
-      <Panel>
-        認証情報を保存して、操作していたウィンドウに戻る処理を行っています...
+      <Panel color="blue">
+        <Box p={2}>
+          認証情報を保存して、操作していたウィンドウに戻る処理を行っています...
+        </Box>
       </Panel>
     );
   }

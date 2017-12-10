@@ -1,18 +1,35 @@
 import React from 'react';
-import { Alert } from 'react-bootstrap';
+import {
+  Message,
+  Close,
+} from 'rebass';
+
+const colourPalette = {
+  info: 'blue',
+  warning: 'orange',
+  success: 'green',
+};
 
 const NotificationPanel = ({
   type,
   message,
   remove,
 }) => (remove ? (
-  <Alert bsStyle={type} onDismiss={remove}>
-    <p>{message}</p>
-  </Alert>
+  <Message
+    my={2}
+    bg={colourPalette[type]}
+    onDismiss={remove}
+  >
+    {message}
+    <Close ml="auto" onClick={remove} />
+  </Message>
 ) : (
-  <Alert bsStyle={type}>
-    <p>{message}</p>
-  </Alert>
+  <Message
+    my={2}
+    bg={colourPalette[type]}
+  >
+    {message}
+  </Message>
 ));
 
 export default NotificationPanel;
