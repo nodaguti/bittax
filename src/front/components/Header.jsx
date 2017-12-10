@@ -2,19 +2,55 @@ import React from 'react';
 import {
   Toolbar,
   NavLink,
-  Text,
 } from 'rebass';
+import Hide from 'hidden-styled';
 import FaPlus from 'react-icons/lib/fa/plus';
+import MdDashboard from 'react-icons/lib/md/dashboard';
+import MdHistory from 'react-icons/lib/md/history';
+import MdAttachMoney from 'react-icons/lib/md/attach-money';
 import { LinkContainer } from 'react-router-bootstrap';
 import BottomTooltip from './BottomTooltip';
 import ToolbarIcon from './ToolbarIcon';
 import ActivityPanelPopover from '../containers/ActivityPanelPopover';
 
-const Header = () => (
+const MobileHeader = () => (
   <Toolbar>
     <LinkContainer to="/">
       <NavLink f={4}>Bittax</NavLink>
     </LinkContainer>
+
+    <LinkContainer to="/dashboard">
+      <NavLink>
+        <ToolbarIcon><MdDashboard color="white" /></ToolbarIcon>
+      </NavLink>
+    </LinkContainer>
+    <LinkContainer to="/">
+      <NavLink>
+        <ToolbarIcon><MdHistory color="white" /></ToolbarIcon>
+      </NavLink>
+    </LinkContainer>
+    <LinkContainer to="/sources">
+      <NavLink>
+        <ToolbarIcon><MdAttachMoney color="white" /></ToolbarIcon>
+      </NavLink>
+    </LinkContainer>
+    <LinkContainer to="/sources">
+      <NavLink ml="auto">
+        <ToolbarIcon><FaPlus color="white" /></ToolbarIcon>
+      </NavLink>
+    </LinkContainer>
+    <NavLink>
+      <ActivityPanelPopover />
+    </NavLink>
+  </Toolbar>
+);
+
+const NormalHeader = () => (
+  <Toolbar>
+    <LinkContainer to="/">
+      <NavLink f={4}>Bittax</NavLink>
+    </LinkContainer>
+
     <LinkContainer to="/dashboard">
       <NavLink>
         ダッシュボード
@@ -30,7 +66,6 @@ const Header = () => (
         取引所一覧
       </NavLink>
     </LinkContainer>
-
     <LinkContainer to="/sources">
       <BottomTooltip text="取引所のデータを追加" ml="auto">
         <NavLink>
@@ -42,6 +77,20 @@ const Header = () => (
       <ActivityPanelPopover />
     </NavLink>
   </Toolbar>
+);
+
+const Header = () => (
+  <div>
+    {/* For xs screens */}
+    <Hide sm md lg>
+      <MobileHeader />
+    </Hide>
+
+    {/* For other screens */}
+    <Hide xs>
+      <NormalHeader />
+    </Hide>
+  </div>
 );
 
 export default Header;
