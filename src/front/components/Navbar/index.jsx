@@ -9,6 +9,8 @@ import MdDashboard from 'react-icons/lib/md/dashboard';
 import MdHistory from 'react-icons/lib/md/history';
 import MdAttachMoney from 'react-icons/lib/md/attach-money';
 import { LinkContainer } from 'react-router-bootstrap';
+import { FormattedMessage } from 'react-intl';
+import messages from './messages';
 import BottomTooltip from '../BottomTooltip';
 import ToolbarIcon from '../ToolbarIcon';
 import ActivityPanelPopover from '../../containers/ActivityPanelPopover';
@@ -45,39 +47,44 @@ const MobileNavbar = () => (
   </Toolbar>
 );
 
-const NormalNavbar = () => (
-  <Toolbar>
-    <LinkContainer to="/">
-      <NavLink f={4}>Bittax</NavLink>
-    </LinkContainer>
+const NormalNavbar = () => {
+  const { formatMessage } = this.context.intl;
+  const addExchangeText = formatMessage(messages.addExchange);
 
-    <LinkContainer to="/dashboard">
-      <NavLink>
-        ダッシュボード
-      </NavLink>
-    </LinkContainer>
-    <LinkContainer to="/">
-      <NavLink>
-        取引履歴
-      </NavLink>
-    </LinkContainer>
-    <LinkContainer to="/sources">
-      <NavLink>
-        取引所一覧
-      </NavLink>
-    </LinkContainer>
-    <LinkContainer to="/sources">
-      <BottomTooltip text="取引所のデータを追加" ml="auto">
+  return (
+    <Toolbar>
+      <LinkContainer to="/">
+        <NavLink f={4}>Bittax</NavLink>
+      </LinkContainer>
+
+      <LinkContainer to="/dashboard">
         <NavLink>
-          <ToolbarIcon><FaPlus color="white" /></ToolbarIcon>
+          <FormattedMessage {...messages.dashboard} />
         </NavLink>
-      </BottomTooltip>
-    </LinkContainer>
-    <NavLink>
-      <ActivityPanelPopover />
-    </NavLink>
-  </Toolbar>
-);
+      </LinkContainer>
+      <LinkContainer to="/">
+        <NavLink>
+          <FormattedMessage {...messages.tradeHistories} />
+        </NavLink>
+      </LinkContainer>
+      <LinkContainer to="/sources">
+        <NavLink>
+          <FormattedMessage {...messages.exchanges} />
+        </NavLink>
+      </LinkContainer>
+      <LinkContainer to="/sources">
+        <BottomTooltip text={addExchangeText} ml="auto">
+          <NavLink>
+            <ToolbarIcon><FaPlus color="white" /></ToolbarIcon>
+          </NavLink>
+        </BottomTooltip>
+      </LinkContainer>
+      <NavLink>
+        <ActivityPanelPopover />
+      </NavLink>
+    </Toolbar>
+  );
+}
 
 const Navbar = () => (
   <div>

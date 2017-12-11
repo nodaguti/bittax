@@ -6,6 +6,8 @@ import {
   Text,
   Progress,
 } from 'rebass';
+import { FormattedMessage } from 'react-intl';
+import messages from './messages';
 
 const renderActivity = (progress) => {
   const {
@@ -45,7 +47,7 @@ const ActivityList = ({ activities }) => (
           color="gray"
           p={3}
         >
-          進行中のタスクはありません
+          <FormattedMessage {...messages.noTasks} />
         </Text>
       ) : (
         activities.map((activity) => renderActivity(activity)).valueSeq().toArray()
