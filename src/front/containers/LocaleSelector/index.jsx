@@ -25,7 +25,7 @@ const LocaleSelector = ({ locale, dispatch }) => {
     >
       {
         locales.map((l) => (
-          <option value={l}>
+          <option key={l} value={l}>
             <FormattedMessage {...messages[l]}>
               {(text) => text}
             </FormattedMessage>

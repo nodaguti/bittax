@@ -76,6 +76,7 @@ class SourceList extends Component {
 
     return (
       <Box
+        key={id}
         px={2}
         py={2}
         w={[
