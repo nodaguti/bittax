@@ -6,6 +6,9 @@ export const rehydrationCompleted = createAction(REHYDRATION_COMPLETED);
 export const ROUTE_CHANGED = 'ROUTE_CHANGED';
 export const routeChanged = createAction(ROUTE_CHANGED);
 
+export const SET_LOCALE = 'SET_LOCALE';
+export const setLocale = createAction(SET_LOCALE);
+
 export const REQUEST_OAUTH_INTEGRATION = 'REQUEST_OAUTH_INTEGRATION';
 export const requestOAuthIntegration = createAction(REQUEST_OAUTH_INTEGRATION);
 

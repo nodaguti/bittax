@@ -7,6 +7,7 @@ import oauth from './oauth';
 import transaction from './transaction';
 import notifications from './notifications';
 import activities from './activities';
+import locale from './locale';
 import error from './error';
 
 const persistConfig = {
@@ -21,5 +22,6 @@ export default persistReducer(persistConfig, combineReducers({
   transaction,
   notifications,
   activities,
+  locale,
   error,
 }));
