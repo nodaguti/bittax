@@ -74,7 +74,7 @@
     "build:client": "cross-env BABEL_ENV=client npm-run-all build:i18n build:webpack",
     "build:i18n": "extract-messages -d en -l=en,ja --flat true -o src/front/locales 'src/**/*.js'",
     "build:webpack": "webpack --config webpack.config.js --progress --display-error-details --display-optimization-bailout",
-    "clean": "rimraf lib dist src/front/locales",
+    "clean": "rimraf lib dist",
     "copy": "npm-run-all copy:*",
     "copy:index": "cpr index.html dist/",
     "lint": "eslint src/**/*.{js,jsx}",
