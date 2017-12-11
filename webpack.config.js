@@ -31,6 +31,7 @@ const babelLoaderQuery = {
   plugins: [
     'transform-object-rest-spread',
     'transform-class-properties',
+    'react-intl-auto',
   ],
 };
 

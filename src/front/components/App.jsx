@@ -5,9 +5,10 @@ import {
   Switch,
 } from 'react-router-dom';
 import {
-  Provider,
+  Provider as ThemeProvider,
   Container,
 } from 'rebass';
+import LocaleProvider from '../containers/LocaleProvider';
 import RouteChangedHandler from '../containers/RouteChangedHandler';
 import Error from '../containers/Error';
 import NotificationList from '../containers/NotificationList';
@@ -24,51 +25,53 @@ const theme = {
 };
 
 const App = () => (
-  <Provider theme={theme}>
-    <Router>
-      <div>
-        <Route component={RouteChangedHandler} />
+  <LocaleProvider>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <div>
+          <Route component={RouteChangedHandler} />
 
-        <Navbar />
+          <Navbar />
 
-        <Container>
-          <Error />
-          <NotificationList />
+          <Container>
+            <Error />
+            <NotificationList />
 
-          <Switch>
-            <Route
-              path="/"
-              exact
-              strict
-              component={Home}
-            />
-            <Route
-              path="/sources"
-              exact
-              strict
-              component={SourceList}
-            />
-            <Route
-              path="/sources/add/:provider"
-              exact
-              strict
-              component={SourceImporter}
-            />
-            <Route
-              path="/integrate/api/:provider"
-              exact
-              strict
-              component={ApiIntegrator}
-            />
-            <Route
-              path="/oauth/:provider"
-              component={OAuthRedirectHandler}
-            />
-          </Switch>
-        </Container>
-      </div>
-    </Router>
-  </Provider>
+            <Switch>
+              <Route
+                path="/"
+                exact
+                strict
+                component={Home}
+              />
+              <Route
+                path="/sources"
+                exact
+                strict
+                component={SourceList}
+              />
+              <Route
+                path="/sources/add/:provider"
+                exact
+                strict
+                component={SourceImporter}
+              />
+              <Route
+                path="/integrate/api/:provider"
+                exact
+                strict
+                component={ApiIntegrator}
+              />
+              <Route
+                path="/oauth/:provider"
+                component={OAuthRedirectHandler}
+              />
+            </Switch>
+          </Container>
+        </div>
+      </Router>
+    </ThemeProvider>
+  </LocaleProvider>
 );
 
 export default App;
