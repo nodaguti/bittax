@@ -8,6 +8,8 @@ import {
   emitError,
 } from '../../actions';
 import APIs from '../../../api';
+import { intl } from '../i18n';
+import messages from './messages';
 
 function waitForCodeReceived({ provider, expectedOrigin }) {
   return new Promise((resolve) => {
@@ -83,8 +85,8 @@ function* callAuthenticate({ payload: { provider } }) {
     }));
   } catch (ex) {
     yield put(emitError({
-      name: '認証エラー',
-      message: '認証作業中にエラーが発生しました．もう一度やり直してください．',
+      name: intl().formatMessage(messages.authenticationError),
+      message: intl().formatMessage(messages.authenticationErrorMessage),
       details: ex,
     }));
   }
@@ -112,8 +114,8 @@ function* callUpdateToken({ payload: { provider, refreshToken } }) {
     }));
   } catch (ex) {
     yield put(emitError({
-      name: '通信エラー',
-      message: `${provider} の連携が切断されました．もう一度連携し直してください．`,
+      name: intl().formatMessage(messages.connectionError),
+      message: intl().formatMessage(messages.connectionErrorMessage, { provider }),
       details: ex,
     }));
   }
@@ -152,8 +154,8 @@ function* handleRedirectInPopup() {
 
     if (!mainWin) {
       yield put(emitError({
-        name: '認証エラー',
-        message: '認証情報の保存に失敗しました．操作していたウィンドウが閉じられているようです．',
+        name: intl().formatMessage(messages.authenticationError),
+        message: intl().formatMessage(messages.targetWindowClosed),
       }));
       continue;
     }
