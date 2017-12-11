@@ -5,6 +5,8 @@ import {
   fetchTradesOfAllPairs,
   appendNotification,
 } from '../../actions';
+import { intl } from '../i18n';
+import messages from './messages';
 
 function* callFetchTokenAndTransactions({ payload: { provider } }) {
   // Wait until the expecting token has been fetched
@@ -18,7 +20,7 @@ function* callFetchTokenAndTransactions({ payload: { provider } }) {
 
   yield put(appendNotification({
     id: `${provider}-integration-completed`,
-    message: `${provider} の OAuth 連携が完了しました．取引データの取得完了まで今しばらくお待ちください．`,
+    message: intl().formatMessage(messages.completed, { provider }),
   }));
 
   yield put(fetchTradesOfAllPairs({ provider }));
