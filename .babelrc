@@ -1,14 +1,69 @@
 {
-  "presets": [
-    [
-      "env",
-      {
-        "targets": {
-          "node": "current"
-        },
-        "useBuiltIns": "usage",
-        "debug": true
-      }
-    ]
-  ]
+  "plugins": [
+    "transform-object-rest-spread",
+    "transform-class-properties"
+  ],
+
+  "env": {
+    "server": {
+      "presets": [
+        [
+          "env",
+          {
+            "targets": {
+              "node": "current"
+            },
+            "useBuiltIns": "usage",
+            "debug": true
+          }
+        ]
+      ]
+    },
+
+    "client": {
+      "presets": [
+        [
+          "env",
+          {
+            "targets": {
+              "browsers": [
+                "> 5%",
+                "last 1 version",
+                "not ie <= 11",
+                "not ie_mob <= 11",
+                "not edge <= 20",
+                "not Android <= 999"
+              ]
+            },
+            "useBuiltIns": "usage",
+            "modules": false,
+            "debug": true
+          }
+        ],
+        "react"
+      ]
+    },
+
+    "react-intl": {
+      "presets": [
+        [
+          "env",
+          {
+            "targets": {
+              "node": "current"
+            }
+          }
+        ],
+        "react"
+      ],
+      "plugins": [
+        [
+          "react-intl-auto",
+          {
+            "removePrefix": "src/front/"
+          }
+        ]
+      ]
+    }
+  }
 }

@@ -70,10 +70,10 @@
   },
   "scripts": {
     "build": "npm-run-all clean copy build:server build:client",
-    "build:server": "babel src/server --out-dir lib --source-maps",
+    "build:server": "cross-env BABEL_ENV=server babel src/server --out-dir lib --source-maps",
     "build:client": "npm-run-all build:i18n build:webpack",
-    "build:i18n": "extract-messages -d en -l=en,ja -o src/front/locales src/**/*.js",
-    "build:webpack": "webpack --config webpack.config.js --progress --display-error-details --display-optimization-bailout",
+    "build:i18n": "cross-env BABEL_ENV=react-intl extract-messages -d en -l=en,ja -o src/front/locales 'src/**/*.js'",
+    "build:webpack": "cross-env BABEL_ENV=client webpack --config webpack.config.js --progress --display-error-details --display-optimization-bailout",
     "clean": "rimraf lib dist",
     "copy": "npm-run-all copy:*",
     "copy:index": "cpr index.html dist/",

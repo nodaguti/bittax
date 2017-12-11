@@ -2,39 +2,6 @@ const webpack = require('webpack');
 const MinifyPlugin = require('babel-minify-webpack-plugin');
 const path = require('path');
 
-const babelLoaderQuery = {
-  cacheDirectory: true,
-  babelrc: false,
-
-  // babel configurations
-  presets: [
-    [
-      'env',
-      {
-        targets: {
-          browsers: [
-            '> 5%',
-            'last 1 version',
-            'not ie <= 11',
-            'not ie_mob <= 11',
-            'not edge <= 20',
-            'not Android <= 999',
-          ],
-        },
-        useBuiltIns: 'usage',
-        modules: false,
-        debug: true,
-      },
-    ],
-    'react',
-  ],
-  plugins: [
-    'transform-object-rest-spread',
-    'transform-class-properties',
-    'react-intl-auto',
-  ],
-};
-
 module.exports = {
   entry: path.join(__dirname, 'src', 'front', 'index.jsx'),
 
@@ -68,14 +35,14 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
-        query: babelLoaderQuery,
+        query: { cacheDirectory: true },
       },
       {
         test: /\.svg$/,
         loaders: [
           {
             loader: 'babel-loader',
-            query: babelLoaderQuery,
+            query: { cacheDirectory: true },
           },
         ],
       },
