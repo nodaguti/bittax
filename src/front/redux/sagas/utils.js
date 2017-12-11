@@ -4,7 +4,7 @@ import {
   appendActivity,
   updateActivity,
   removeActivity,
-} from '../../actions';
+} from '../actions';
 
 function createProgressChannel([context, func], ...args) {
   return eventChannel((emit) => {
