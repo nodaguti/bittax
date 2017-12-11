@@ -47,20 +47,6 @@
           }
         ],
         "react"
-      ]
-    },
-
-    "react-intl": {
-      "presets": [
-        [
-          "env",
-          {
-            "targets": {
-              "node": "current"
-            }
-          }
-        ],
-        "react"
       ],
       "plugins": [
         [
