@@ -12,11 +12,12 @@ import {
   Box,
 } from 'rebass';
 import LocaleProvider from '../../containers/LocaleProvider';
+import Navbar from '../Navbar';
 import RouteChangedHandler from '../../containers/RouteChangedHandler';
+import Home from '../../containers/Home';
+import Landing from '../Landing';
 import Error from '../../containers/Error';
 import NotificationList from '../../containers/NotificationList';
-import Navbar from '../Navbar';
-import Home from '../../containers/Home';
 import SourceList from '../../containers/SourceList';
 import SourceImporter from '../../containers/SourceImporter';
 import ApiIntegrator from '../../containers/ApiIntegrator';
@@ -42,41 +43,51 @@ const App = () => (
             <Navbar />
           </Box>
           <Box flex="1 0 auto">
-            <Container>
-              <Error />
-              <NotificationList />
+            <Switch>
+              <Route
+                path="/"
+                exact
+                strict
+                component={Home}
+              />
+              <Route
+                path="/landing"
+                exact
+                strict
+                component={Landing}
+              />
+              <Route>
+                <Container>
+                  <Error />
+                  <NotificationList />
 
-              <Switch>
-                <Route
-                  path="/"
-                  exact
-                  strict
-                  component={Home}
-                />
-                <Route
-                  path="/sources"
-                  exact
-                  strict
-                  component={SourceList}
-                />
-                <Route
-                  path="/sources/add/:provider"
-                  exact
-                  strict
-                  component={SourceImporter}
-                />
-                <Route
-                  path="/integrate/api/:provider"
-                  exact
-                  strict
-                  component={ApiIntegrator}
-                />
-                <Route
-                  path="/oauth/:provider"
-                  component={OAuthRedirectHandler}
-                />
-              </Switch>
-            </Container>
+                  <Switch>
+                    <Route
+                      path="/sources"
+                      exact
+                      strict
+                      component={SourceList}
+                    />
+                    <Route
+                      path="/sources/add/:provider"
+                      exact
+                      strict
+                      component={SourceImporter}
+                    />
+                    <Route
+                      path="/integrate/api/:provider"
+                      exact
+                      strict
+                      component={ApiIntegrator}
+                    />
+                    <Route
+                      path="/oauth/:provider"
+                      component={OAuthRedirectHandler}
+                    />
+                  </Switch>
+                </Container>
+              </Route>
+            </Switch>
           </Box>
           <Box flex="0 0 auto">
             <Footer />
