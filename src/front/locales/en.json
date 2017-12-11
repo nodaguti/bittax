@@ -1,9 +1,13 @@
 {
   "components.ActivityList.noTasks": "No Tasks in Progress",
+  "components.Footer.disclaimer": "Please contact a qualified enrolled agent for detailed and/or personalised tax advisory. This service is provided for informational purposes only, WITHOUT warranty of any kind. In no event shall the authors be liable for any claim, damages or other liability, arising from, out of or in connection with the service or the use or other dealings in the service.",
+  "components.Footer.opensource": "The source of this service is fully accessible on {linkToGithub} and licensed under MIT License.",
   "components.Navbar.addExchange": "Add Exchange",
   "components.Navbar.dashboard": "Dashboard",
   "components.Navbar.exchanges": "Exchanges",
   "components.Navbar.tradeHistories": "Trade Histories",
+  "containers.LocaleSelector.en": "English",
+  "containers.LocaleSelector.ja": "日本語 (Japanese)",
   "containers.OAuthRedirectHandler.authenticationError": "Authentication Error",
   "containers.OAuthRedirectHandler.authenticationErrorMessage": "Unable to receive authentication data from {provider}. Please try again.",
   "containers.OAuthRedirectHandler.saving": "Saving authentication data and returning back to the original window...",

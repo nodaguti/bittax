@@ -1,9 +1,13 @@
 {
   "components.ActivityList.noTasks": "進行中のタスクはありません",
+  "components.Footer.disclaimer": "本サービスは仮定条件に基づく税概算額の試算やそれに基づく情報提供を目的として提供されるものであり、税務申告の添付資料としては使用できません。税務に関する疑問点がある場合や実際に申告を行う場合には、税理士等の専門家に必ずご相談下さい。本サービスはなんらの保証もなしに提供されます。サービスを利用したことに伴うあらゆる不利益や損害は全て利用者の責に帰せられます。",
+  "components.Footer.opensource": "本サービスのソースコード MIT License の下に提供され、{linkToGithub} から取得可能です。",
   "components.Navbar.addExchange": "取引所のデータを追加",
   "components.Navbar.dashboard": "ダッシュボード",
   "components.Navbar.exchanges": "取引所一覧",
   "components.Navbar.tradeHistories": "取引履歴",
+  "containers.LocaleSelector.en": "English (英語)",
+  "containers.LocaleSelector.ja": "日本語 (Japanese)",
   "containers.OAuthRedirectHandler.authenticationError": "認証エラー",
   "containers.OAuthRedirectHandler.authenticationErrorMessage": "{provider} から認証情報が受信できませんでした。もう一度やり直してください。",
   "containers.OAuthRedirectHandler.saving": "認証情報を保存して、操作していたウィンドウに戻る処理を行っています...",

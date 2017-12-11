@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Toolbar,
   NavLink,
@@ -9,7 +10,7 @@ import MdDashboard from 'react-icons/lib/md/dashboard';
 import MdHistory from 'react-icons/lib/md/history';
 import MdAttachMoney from 'react-icons/lib/md/attach-money';
 import { LinkContainer } from 'react-router-bootstrap';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, intlShape } from 'react-intl';
 import messages from './messages';
 import BottomTooltip from '../BottomTooltip';
 import ToolbarIcon from '../ToolbarIcon';
@@ -47,8 +48,8 @@ const MobileNavbar = () => (
   </Toolbar>
 );
 
-const NormalNavbar = () => {
-  const { formatMessage } = this.context.intl;
+const NormalNavbar = (_, { intl }) => {
+  const { formatMessage } = intl;
   const addExchangeText = formatMessage(messages.addExchange);
 
   return (
@@ -84,7 +85,12 @@ const NormalNavbar = () => {
       </NavLink>
     </Toolbar>
   );
-}
+};
+
+// Allow NormalNavbar to reference `context`.
+NormalNavbar.contextTypes = {
+  intl: intlShape,
+};
 
 const Navbar = () => (
   <div>
