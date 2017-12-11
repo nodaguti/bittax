@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { routeChanged } from '../redux/actions';
+import { routeChanged } from '../../redux/actions';
 
 class RouteChangedHandler extends Component {
   componentWillReceiveProps(nextProps) {

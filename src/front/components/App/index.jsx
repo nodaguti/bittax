@@ -8,16 +8,16 @@ import {
   Provider as ThemeProvider,
   Container,
 } from 'rebass';
-import LocaleProvider from '../containers/LocaleProvider';
-import RouteChangedHandler from '../containers/RouteChangedHandler';
-import Error from '../containers/Error';
-import NotificationList from '../containers/NotificationList';
-import Navbar from '../components/Navbar';
-import Home from '../containers/Home';
-import SourceList from '../containers/SourceList';
-import SourceImporter from '../containers/SourceImporter';
-import ApiIntegrator from '../containers/ApiIntegrator';
-import OAuthRedirectHandler from '../containers/OAuthRedirectHandler';
+import LocaleProvider from '../../containers/LocaleProvider';
+import RouteChangedHandler from '../../containers/RouteChangedHandler';
+import Error from '../../containers/Error';
+import NotificationList from '../../containers/NotificationList';
+import Navbar from '../Navbar';
+import Home from '../../containers/Home';
+import SourceList from '../../containers/SourceList';
+import SourceImporter from '../../containers/SourceImporter';
+import ApiIntegrator from '../../containers/ApiIntegrator';
+import OAuthRedirectHandler from '../../containers/OAuthRedirectHandler';
 
 const theme = {
   // https://qiita.com/RinoTsuka/items/4181efd43d072e246519

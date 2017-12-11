@@ -7,7 +7,7 @@ import {
 import {
   oAuthPopupRedirected,
   emitError,
-} from '../redux/actions';
+} from '../../redux/actions';
 
 class OAuthRedirectHandler extends Component {
   componentDidMount() {

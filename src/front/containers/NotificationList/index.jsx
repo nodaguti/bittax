@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import NotificationPanel from '../components/NotificationPanel';
-import { removeNotification } from '../redux/actions';
+import NotificationPanel from '../../components/NotificationPanel';
+import { removeNotification } from '../../redux/actions';
 
 const mapStateToProps = (state) => ({
   notifications: state.notifications,

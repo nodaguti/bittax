@@ -9,9 +9,9 @@ import MdDashboard from 'react-icons/lib/md/dashboard';
 import MdHistory from 'react-icons/lib/md/history';
 import MdAttachMoney from 'react-icons/lib/md/attach-money';
 import { LinkContainer } from 'react-router-bootstrap';
-import BottomTooltip from './BottomTooltip';
-import ToolbarIcon from './ToolbarIcon';
-import ActivityPanelPopover from '../containers/ActivityPanelPopover';
+import BottomTooltip from '../BottomTooltip';
+import ToolbarIcon from '../ToolbarIcon';
+import ActivityPanelPopover from '../../containers/ActivityPanelPopover';
 
 const MobileNavbar = () => (
   <Toolbar>

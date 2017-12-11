@@ -1,6 +1,6 @@
 import React from 'react';
 import { Panel } from 'rebass';
-import ActivityList from './ActivityList';
+import ActivityList from '../ActivityList';
 
 const ActivityPanel = ({ activities, ...props }) => (
   <Panel color="black" bg="white" {...props}>

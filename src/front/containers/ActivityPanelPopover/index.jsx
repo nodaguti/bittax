@@ -10,8 +10,8 @@ import {
 } from 'rebass';
 import styled, { keyframes } from 'styled-components';
 import MdDataUsage from 'react-icons/lib/md/data-usage';
-import ActivityPanel from '../components/ActivityPanel';
-import ToolbarIcon from '../components/ToolbarIcon';
+import ActivityPanel from '../../components/ActivityPanel';
+import ToolbarIcon from '../../components/ToolbarIcon';
 
 const mapStateToProps = (state) => ({
   activities: state.activities,

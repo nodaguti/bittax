@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import ErrorPanel from '../components/ErrorPanel';
+import ErrorPanel from '../../components/ErrorPanel';
 
 const mapStateToProps = (state) => ({
   error: state.error,

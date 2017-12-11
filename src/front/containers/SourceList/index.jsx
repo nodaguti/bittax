@@ -9,9 +9,9 @@ import {
 import {
   BlockButton,
   BlockButtonOutline,
-} from '../components/BlockButton';
-import { requestOAuthIntegration } from '../redux/actions';
-import providers from '../providers';
+} from '../../components/BlockButton';
+import { requestOAuthIntegration } from '../../redux/actions';
+import providers from '../../providers';
 
 const mapStateToProps = (state) => ({
   oauth: state.oauth,
