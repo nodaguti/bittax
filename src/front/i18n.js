@@ -6,8 +6,8 @@ import enMessages from './locales/en.json';
 import jaMessages from './locales/ja.json';
 
 addLocaleData([
-  enLocaleData,
-  jaLocaleData,
+  ...enLocaleData,
+  ...jaLocaleData,
 ]);
 
 const messages = {

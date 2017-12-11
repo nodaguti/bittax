@@ -4,7 +4,7 @@ import {
   Panel,
   Box,
 } from 'rebass';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, intlShape } from 'react-intl';
 import messages from './messages';
 import {
   oAuthPopupRedirected,
@@ -12,6 +12,11 @@ import {
 } from '../../redux/actions';
 
 class OAuthRedirectHandler extends Component {
+  // Allow the component to reference `context`.
+  static contextTypes = {
+    intl: intlShape,
+  };
+
   componentDidMount() {
     const { match, dispatch } = this.props;
     const { provider } = match.params;
