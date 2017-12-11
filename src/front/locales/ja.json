@@ -1,3 +1,11 @@
 {
-  "redux.sagas.integration.completed": ""
+  "redux.sagas.integration.completed": "{provider} との OAuth 連携に成功しました。取引履歴の取得が完了するまで今しばらくお待ちください。",
+  "redux.sagas.oauth.authenticationError": "認証エラー",
+  "redux.sagas.oauth.authenticationErrorMessage": "OAuth 認証の際にエラーが発生しました。連携をやり直してください。",
+  "redux.sagas.oauth.connectionError": "通信エラー",
+  "redux.sagas.oauth.connectionErrorMessage": "{provider} との連携が解除されました。連携をやり直してください。",
+  "redux.sagas.oauth.targetWindowClosed": "認証情報の保存に失敗しました。元のウィンドウ/タブが閉じられているようです。",
+  "redux.sagas.trade.connectionError": "通信エラー",
+  "redux.sagas.trade.connectionErrorMessage": "{provider} からの取引履歴取得に失敗しました。相手サーバが落ちているかもしれません。",
+  "redux.sagas.trade.fetchTrades": "{provider} から取引履歴取得中"
 }
