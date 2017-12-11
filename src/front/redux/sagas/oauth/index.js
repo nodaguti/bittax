@@ -9,19 +9,6 @@ import {
 } from '../../actions';
 import APIs from '../../../api';
 
-const isPopupBlocked = (win) => new Promise((resolve) => {
-  // The detection should be delayed 10 msec to make sure
-  // it works properly in Chrome.
-  setTimeout(() => {
-    try {
-      resolve(!(win && win.innerHeight && win.innerHeight > 0));
-    } catch (ex) {
-      // If an error occurs, it means an window with a different origin is opened.
-      resolve(true);
-    }
-  }, 10);
-});
-
 function waitForCodeReceived({ provider, expectedOrigin }) {
   return new Promise((resolve) => {
     const onMessage = ({ data, origin }) => {
@@ -47,12 +34,6 @@ function waitForCodeReceived({ provider, expectedOrigin }) {
 function* fetchCode({ provider }) {
   const api = APIs[provider].oAuth;
   const { state, authWin } = api.openAuthWindow();
-
-  // const isBlocked = yield call(isPopupBlocked, authWin);
-  // if (isBlocked) {
-  //   throw new Error('Popup Blocked');
-  // }
-
   const selfOrigin = window.location.origin;
 
   const { code, state: stateReturned } = yield call(waitForCodeReceived, {
