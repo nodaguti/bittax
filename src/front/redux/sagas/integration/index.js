@@ -4,7 +4,7 @@ import {
   OAUTH_TOKEN_FETCHED,
   fetchTradesOfAllPairs,
   appendNotification,
-} from '../actions';
+} from '../../actions';
 
 function* callFetchTokenAndTransactions({ payload: { provider } }) {
   // Wait until the expecting token has been fetched

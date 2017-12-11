@@ -5,8 +5,8 @@ import {
   REHYDRATION_COMPLETED,
   OAUTH_TOKEN_FETCHED,
   refreshOAuthToken,
-} from '../actions';
-import APIs from '../../api';
+} from '../../actions';
+import APIs from '../../../api';
 
 function* delayedRun(ms, func, ...args) {
   yield call(delay, ms);

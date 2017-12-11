@@ -3,8 +3,8 @@ import { IntlProvider } from 'react-intl';
 import {
   REHYDRATION_COMPLETED,
   SET_LOCALE,
-} from '../actions';
-import messages from '../../i18n';
+} from '../../actions';
+import messages from '../../../i18n';
 
 class IntlProviderManager {
   locale = '';

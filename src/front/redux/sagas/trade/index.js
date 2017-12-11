@@ -3,9 +3,9 @@ import {
   FETCH_TRADES_OF_ALL_PAIRS,
   transactionsFetched,
   emitError,
-} from '../actions';
-import APIs from '../../api';
-import fetchWithRequestHandling from './utils/progress';
+} from '../../actions';
+import APIs from '../../../api';
+import fetchWithRequestHandling from '../utils';
 
 function* callTradesOfAllPairs({ payload: { provider, since = 0 } }) {
   const api = APIs[provider];

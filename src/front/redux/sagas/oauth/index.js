@@ -6,8 +6,8 @@ import {
   REFRESH_OAUTH_TOKEN,
   oAuthTokenFetched,
   emitError,
-} from '../actions';
-import APIs from '../../api';
+} from '../../actions';
+import APIs from '../../../api';
 
 const isPopupBlocked = (win) => new Promise((resolve) => {
   // The detection should be delayed 10 msec to make sure

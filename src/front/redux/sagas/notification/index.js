@@ -2,7 +2,7 @@ import { take, put, fork, select } from 'redux-saga/effects';
 import {
   ROUTE_CHANGED,
   removeNotifications,
-} from '../actions';
+} from '../../actions';
 
 function* clearEphemeralNotificationsOnRouteChanged() {
   while (true) {

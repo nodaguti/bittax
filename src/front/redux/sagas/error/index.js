@@ -4,7 +4,7 @@ import {
   EMIT_ERROR,
   emitMaskedError,
   clearError,
-} from '../actions';
+} from '../../actions';
 
 function* maskErrorDetails() {
   while (true) {
