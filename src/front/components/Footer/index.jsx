@@ -18,6 +18,9 @@ const Footer = () => (
       <LinkContainer to="/landing">
         <NavLink>About</NavLink>
       </LinkContainer>
+      <LinkContainer to="/terms">
+        <NavLink>Terms</NavLink>
+      </LinkContainer>
       <LinkContainer to="/privacy">
         <NavLink>Privacy</NavLink>
       </LinkContainer>
