@@ -1,10 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
-class Home extends Component {
-  render() {
-    return (<div>Home!</div>);
-  }
-}
+const mapStateToProps = (state) => ({
+  transaction: state.transaction,
+});
 
-export default connect()(Home);
+const Home = ({ transaction }) => {
+  const hasTransaction = !transaction.isEmpty();
+
+  return hasTransaction ? (
+    <Redirect to="/dashboard" />
+  ) : (
+    <Redirect to="/landing" />
+  );
+};
+
+export default connect(mapStateToProps)(Home);
