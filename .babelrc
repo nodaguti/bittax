@@ -1,7 +1,13 @@
 {
   "plugins": [
     "transform-object-rest-spread",
-    "transform-class-properties"
+    "transform-class-properties",
+    [
+      "react-intl-auto",
+      {
+        "removePrefix": "src.front"
+      }
+    ]
   ],
 
   "env": {
@@ -60,7 +66,7 @@
         [
           "react-intl-auto",
           {
-            "removePrefix": "src/front/"
+            "removePrefix": "src.front"
           }
         ]
       ]
