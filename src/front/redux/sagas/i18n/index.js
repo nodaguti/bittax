@@ -16,7 +16,7 @@ class IntlProviderManager {
   }
 
   set locale(locale) {
-    const provider = new IntlProvider({ locale, messages });
+    const provider = new IntlProvider({ locale, messages: messages[locale] });
     this.cachedIntl = provider.getChildContext().intl;
   }
 
