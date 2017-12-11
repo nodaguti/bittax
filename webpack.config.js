@@ -37,15 +37,6 @@ module.exports = {
         loader: 'babel-loader',
         query: { cacheDirectory: true },
       },
-      {
-        test: /\.svg$/,
-        loaders: [
-          {
-            loader: 'babel-loader',
-            query: { cacheDirectory: true },
-          },
-        ],
-      },
     ],
   },
 
