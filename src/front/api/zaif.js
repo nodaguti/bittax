@@ -222,7 +222,7 @@ class PrivateAPI {
     return emitter;
   }
 
-  async fetchWithdrawsOfCurrency({ currency, since = 0, end }) {
+  async fetchWithdrawalsOfCurrency({ currency, since = 0, end }) {
     if (!this.token) {
       throw new Error('Available token is needed.');
     }
@@ -254,7 +254,7 @@ class PrivateAPI {
       });
   }
 
-  fetchWithdrawls({ since = 0, end }) {
+  fetchWithdrawals({ since = 0, end }) {
     if (!this.token) {
       throw new Error('Available token is needed.');
     }
@@ -269,7 +269,7 @@ class PrivateAPI {
 
         emitter.emit('progress', { done, total });
 
-        const promises = currencies.map((currency) => this.fetchWithdrawsOfCurrency({
+        const promises = currencies.map((currency) => this.fetchWithdrawalsOfCurrency({
           currency,
           since,
           end,
