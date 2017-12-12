@@ -1,5 +1,6 @@
 import { fork, put, call, takeEvery, all, select } from 'redux-saga/effects';
 import camelCase from 'camel-case';
+import { Map } from 'immutable';
 import {
   FETCH_TRANSACTIONS,
   transactionsFetched,
@@ -10,7 +11,7 @@ import fetchWithRequestHandling from '../utils';
 import { intl } from '../i18n';
 import messages from './messages';
 
-function* callPrivateAPI({ provider, operation, ...args }) {
+function* callPrivateAPI({ provider, operation }, ...args) {
   const api = APIs[provider];
   const methodName = camelCase(`fetch-${operation}`);
   const activityId = `${provider}-${operation}-${Date.now()}`;
@@ -20,7 +21,7 @@ function* callPrivateAPI({ provider, operation, ...args }) {
     fetchWithRequestHandling,
     { id: activityId, title: activityTitle },
     [api.private, methodName],
-    args,
+    ...args,
   );
 }
 
@@ -28,27 +29,36 @@ function* callFetchTransactions({ payload: { provider } }) {
   try {
     const transactionStore = yield select((state) => state.transaction);
     const transactionRecord = transactionStore.get(provider);
-    const { fetchedAt: lastFetchedAt = 0 } = transactionRecord || {};
-    const now = Date.now();
-
-    const calls = [
+    const {
+      fetchedAt: lastFetchedAt = 0,
+      transactions: fetchedTransactions,
+    } = transactionRecord || {};
+    const operations = [
       'trades',
       'withdrawals',
       'deposits',
-    ].map((operation) => callPrivateAPI({
-      provider,
-      operation,
-      since: lastFetchedAt + 1,
-      end: now,
-    }));
+    ];
+    const now = Date.now();
 
+    const calls = operations.map((operation) => callPrivateAPI(
+      {
+        provider,
+        operation,
+      },
+      null,
+      {
+        lastFetchedAt,
+        fetchedTransactions,
+      },
+    ));
     const results = yield all(calls);
-    const puts = results.map((transactionsMap) => put(transactionsFetched({
-      provider,
-      transactionsMap,
-    })));
+    const mergedTransactionsMap = (new Map()).mergeDeep(...results);
 
-    yield all(puts);
+    yield put(transactionsFetched({
+      provider,
+      transactionsMap: mergedTransactionsMap,
+      lastFetchedAt: now,
+    }));
   } catch (ex) {
     yield put(emitError({
       name: intl().formatMessage(messages.connectionError),

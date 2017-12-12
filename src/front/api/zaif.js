@@ -2,13 +2,15 @@ import { EventEmitter } from 'events';
 import Bottleneck from 'bottleneck';
 import uuidv4 from 'uuid/v4';
 import { merge } from 'lodash-es';
-import fetch from './utils/proxied-fetch';
+import { Map } from 'immutable';
 import Nonce from './utils/nonce';
+import fetch from './utils/proxied-fetch';
 
 const CLIENT_ID = '08b30c2a9afb48d6be42a511f9186cc3';
 const CLIENT_SECRET = 'c7a70886878c4aa0bbd7afa815de35bc';
 
-const limiter = new Bottleneck(1, 3 * 1000);
+const fetchLimiter = new Bottleneck(1, 3500);
+const enqueueLimiter = new Bottleneck(1);
 const nonce = new Nonce();
 
 const parseCurrencyPair = (currencyPair) => {
@@ -16,43 +18,70 @@ const parseCurrencyPair = (currencyPair) => {
   return { base, quoted };
 };
 
-const fetchAPI = async (url, { params, ...opts } = {}, isPrivate = false) => {
-  let fetchOptions = opts;
+/**
+ * This func should be called via `enqueueLimiter#schedule`
+ * to make sure `nonce#next` is never executed concurrently
+ */
+const enqueueFetch = (url, { params, ...opts } = {}, isPrivate = false) => {
+  if (isPrivate) {
+    const n = nonce.next() / 1e14;
+
+    // eslint-disable-next-line no-param-reassign
+    params = Object.assign({}, params, { nonce: n });
+  }
 
   if (params) {
     const searchParams = new URLSearchParams(params);
 
-    fetchOptions = merge({}, fetchOptions, {
+    // eslint-disable-next-line no-param-reassign
+    opts = merge({}, opts, {
       method: 'POST',
       body: searchParams,
     });
   }
 
-  const res = await limiter.schedule(fetch, url, fetchOptions);
-  const json = await res.json();
+  return fetchLimiter.schedule(fetch, url, opts);
+};
 
-  if (!isPrivate) {
-    return json;
-  }
+const fetchAPI = async (url, { params, ...opts } = {}, isPrivate = false) => {
+  const req = enqueueLimiter.schedule(enqueueFetch, url, { params, ...opts }, isPrivate);
+  const res = await req;
+  const resForErrorHandling = res.clone();
 
-  if (json.success !== 1) {
-    const message = json.return || res.headers.get('x-message');
+  try {
+    const json = await res.json();
 
-    if (message === 'time wait restriction, please try later.') {
-      return fetchAPI(
-        url,
-        {
-          params: Object.assign({}, params, { nonce: nonce.next() }),
-          ...opts,
-        },
-        isPrivate,
-      );
+    if (!isPrivate) {
+      return json;
     }
 
-    throw new Error(`Server Error: ${message}`);
-  }
+    if (json.success !== 1) {
+      const retryableMessages = [
+        'time wait restriction, please try later.',
+        'nonce not incremented',
+      ];
+      const message = json.return || res.headers.get('x-message');
 
-  return json.return;
+      if (retryableMessages.includes(message)) {
+        console.warn(`Retry: "${message}" from ${url} (params: ${JSON.stringify({ params, ...opts })})`);
+        return fetchAPI(url, { params, ...opts }, isPrivate);
+      }
+
+      throw new Error(`Server Error: ${message}`);
+    }
+
+    return json.return;
+  } catch (ex) {
+    const text = await resForErrorHandling.text();
+
+    if (text.includes('Bad Gateway')) {
+      console.warn(`Retry: Got the following from ${url} (params: ${JSON.stringify({ params, ...opts })}):\n\n${text}`);
+      return fetchAPI(url, { params, ...opts }, isPrivate);
+    }
+
+    console.error(`Got the following from ${url} (params: ${JSON.stringify({ params, ...opts })}):\n\n${text}`);
+    throw ex;
+  }
 };
 
 class OAuthAPI {
@@ -134,7 +163,7 @@ class PrivateAPI {
     this.token = token;
   }
 
-  async fetchTradesOfCurrencyPair({ currencyPair, since = 0, end }) {
+  async fetchTradesOfCurrencyPair({ currencyPair }, { lastFetchedAt } = {}) {
     if (!this.token) {
       throw new Error('Available token is needed.');
     }
@@ -145,10 +174,8 @@ class PrivateAPI {
       },
       params: {
         method: 'trade_history',
-        nonce: nonce.next(),
         currency_pair: currencyPair,
-        since,
-        end,
+        since: lastFetchedAt,
       },
     }, true);
 
@@ -173,7 +200,7 @@ class PrivateAPI {
       });
   }
 
-  fetchTrades({ since = 0, end }) {
+  fetchTrades(_, { lastFetchedAt } = {}) {
     if (!this.token) {
       throw new Error('Available token is needed.');
     }
@@ -195,8 +222,8 @@ class PrivateAPI {
 
         const promises = pairs.map((currencyPair) => this.fetchTradesOfCurrencyPair({
           currencyPair,
-          since,
-          end,
+        }, {
+          lastFetchedAt,
         }).then((data) => {
           done += 1;
           emitter.emit('progress', { done, total });
@@ -205,13 +232,11 @@ class PrivateAPI {
         }));
 
         const histories = await Promise.all(promises);
-        const results = new Map();
+        const results = new Map(histories.map((history, idx) => {
+          if (!history.length) return null;
 
-        histories.forEach((history, idx) => {
-          if (history.length > 0) {
-            results.set(pairs[idx], history);
-          }
-        });
+          return [pairs[idx], history];
+        }).filter((tuple) => tuple !== null));
 
         emitter.emit('end', results);
       } catch (ex) {
@@ -222,7 +247,7 @@ class PrivateAPI {
     return emitter;
   }
 
-  async fetchWithdrawalsOfCurrency({ currency, since = 0, end }) {
+  async fetchWithdrawalsOfCurrency({ currency }, { lastFetchedAt } = {}) {
     if (!this.token) {
       throw new Error('Available token is needed.');
     }
@@ -233,10 +258,8 @@ class PrivateAPI {
       },
       params: {
         method: 'withdraw_history',
-        nonce: nonce.next(),
         currency,
-        since,
-        end,
+        since: lastFetchedAt,
       },
     }, true);
 
@@ -254,7 +277,7 @@ class PrivateAPI {
       });
   }
 
-  fetchWithdrawals({ since = 0, end }) {
+  fetchWithdrawals(_, { lastFetchedAt } = {}) {
     if (!this.token) {
       throw new Error('Available token is needed.');
     }
@@ -271,8 +294,8 @@ class PrivateAPI {
 
         const promises = currencies.map((currency) => this.fetchWithdrawalsOfCurrency({
           currency,
-          since,
-          end,
+        }, {
+          lastFetchedAt,
         }).then((data) => {
           done += 1;
           emitter.emit('progress', { done, total });
@@ -281,13 +304,11 @@ class PrivateAPI {
         }));
 
         const histories = await Promise.all(promises);
-        const results = new Map();
+        const results = new Map(histories.map((history, idx) => {
+          if (!history.length) return null;
 
-        histories.forEach((history, idx) => {
-          if (history.length > 0) {
-            results.set(currencies[idx], history);
-          }
-        });
+          return [currencies[idx], history];
+        }).filter((tuple) => tuple !== null));
 
         emitter.emit('end', results);
       } catch (ex) {
@@ -298,7 +319,7 @@ class PrivateAPI {
     return emitter;
   }
 
-  async fetchDepositsOfCurrency({ currency, since = 0, end }) {
+  async fetchDepositsOfCurrency({ currency }, { lastFetchedAt } = {}) {
     if (!this.token) {
       throw new Error('Available token is needed.');
     }
@@ -309,10 +330,8 @@ class PrivateAPI {
       },
       params: {
         method: 'deposit_history',
-        nonce: nonce.next(),
         currency,
-        since,
-        end,
+        since: lastFetchedAt,
       },
     }, true);
 
@@ -330,7 +349,7 @@ class PrivateAPI {
       });
   }
 
-  fetchDeposits({ since = 0, end }) {
+  fetchDeposits(_, { lastFetchedAt } = {}) {
     if (!this.token) {
       throw new Error('Available token is needed.');
     }
@@ -347,8 +366,8 @@ class PrivateAPI {
 
         const promises = currencies.map((currency) => this.fetchDepositsOfCurrency({
           currency,
-          since,
-          end,
+        }, {
+          lastFetchedAt,
         }).then((data) => {
           done += 1;
           emitter.emit('progress', { done, total });
@@ -357,13 +376,11 @@ class PrivateAPI {
         }));
 
         const histories = await Promise.all(promises);
-        const results = new Map();
+        const results = new Map(histories.map((history, idx) => {
+          if (!history.length) return null;
 
-        histories.forEach((history, idx) => {
-          if (history.length > 0) {
-            results.set(currencies[idx], history);
-          }
-        });
+          return [currencies[idx], history];
+        }).filter((tuple) => tuple !== null));
 
         emitter.emit('end', results);
       } catch (ex) {

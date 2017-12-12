@@ -35,7 +35,7 @@ export const OAuthToken = new Record({
 
 export const Transactions = new Record({
   fetchedAt: 0,
-  transactions: new Map(), // [currency_pair]: List<Transaction>
+  transactions: new Map(), // [currency_pair]: OrderedMap<[id]: Transaction>
 }, 'transactions');
 
 export const Transaction = new Record({
