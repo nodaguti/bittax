@@ -183,8 +183,8 @@ class PrivateAPI {
     (async () => {
       try {
         const pairs = await PublicAPI.fetchCurrencyPairs();
-        const total = pairs.length;
-        let done = 0;
+        const total = pairs.length + 1; // add one to take `fetchCurrencyPairs` into account
+        let done = 1;
 
         emitter.emit('progress', { done, total });
 
