@@ -1,12 +1,23 @@
 export default class Nonce {
-  current = 0;
+  last = 0;
 
   constructor(start = 0) {
-    this.current = start;
+    this.last = start;
   }
 
   next() {
-    this.current += 1;
-    return this.current;
+    let nonce = 100 * Date.now();
+
+    while (true) {
+      if (nonce !== this.last) {
+        break;
+      }
+
+      nonce += 1;
+    }
+
+    this.last = nonce;
+
+    return nonce;
   }
 }
