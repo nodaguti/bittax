@@ -11,6 +11,11 @@ const CLIENT_SECRET = 'c7a70886878c4aa0bbd7afa815de35bc';
 const limiter = new Bottleneck(1, 3 * 1000);
 const nonce = new Nonce();
 
+const parseCurrencyPair = (currencyPair) => {
+  const [base, quoted] = currencyPair.toLowerCase().split('_');
+  return { base, quoted };
+};
+
 const fetchAPI = async (url, { params, ...opts } = {}, isPrivate = false) => {
   let fetchOptions = opts;
 
@@ -124,7 +129,7 @@ class PrivateAPI {
     this.token = token;
   }
 
-  async fetchTrades({ currencyPair, since = 0 }) {
+  async fetchTrades({ currencyPair, since = 0, end }) {
     if (!this.token) {
       throw new Error('Available token is needed.');
     }
@@ -138,10 +143,11 @@ class PrivateAPI {
         nonce: nonce.next(),
         currency_pair: currencyPair,
         since,
+        end,
       },
     }, true);
 
-    const [base, quoted] = currencyPair.toLowerCase().split('_');
+    const { base, quoted } = parseCurrencyPair(currencyPair);
 
     return Object.entries(trades)
       .map(([orderId, trade]) => {
@@ -162,7 +168,7 @@ class PrivateAPI {
       });
   }
 
-  fetchTradesOfAllPairs({ since = 0 }) {
+  fetchTradesOfAllPairs({ since = 0, end }) {
     if (!this.token) {
       throw new Error('Available token is needed.');
     }
@@ -185,6 +191,7 @@ class PrivateAPI {
         const promises = pairs.map((pair) => this.fetchTrades({
           token: this.token,
           since,
+          end,
           currencyPair: pair,
         }).then((data) => {
           done += 1;
