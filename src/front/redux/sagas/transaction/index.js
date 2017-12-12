@@ -20,7 +20,7 @@ function* callPrivateAPI({ provider, operation, ...args }) {
     fetchWithRequestHandling,
     { id: activityId, title: activityTitle },
     [api.private, methodName],
-    ...args,
+    args,
   );
 }
 
