@@ -7,6 +7,10 @@ const reducers = {
   [EMIT_MASKED_ERROR](state, {
     name, message, details,
   }) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error(details);
+    }
+
     return new ImmutableError({
       name,
       message,
