@@ -11,22 +11,19 @@ import APIs from '../../../api';
 import { intl } from '../i18n';
 import messages from './messages';
 
-function waitForCodeReceived({ provider, expectedOrigin }) {
+function waitForCodeReceived({ provider, expectedOrigin, expectedState }) {
   return new Promise((resolve) => {
     const onMessage = ({ data, origin }) => {
       if (origin !== expectedOrigin) return;
+      if (!data) return;
 
-      try {
-        const { provider: _provider, code, state } = data;
+      const { provider: _provider, code, state } = data;
 
-        if (_provider !== provider) return;
+      if (_provider !== provider) return;
+      if (state !== expectedState) return;
 
-        window.removeEventListener('message', onMessage);
-
-        resolve({ code, state });
-      } catch (ex) {
-        console.error(ex);
-      }
+      window.removeEventListener('message', onMessage);
+      resolve(code);
     };
 
     window.addEventListener('message', onMessage, false);
@@ -38,14 +35,11 @@ function* fetchCode({ provider }) {
   const { state, authWin } = api.openAuthWindow();
   const selfOrigin = window.location.origin;
 
-  const { code, state: stateReturned } = yield call(waitForCodeReceived, {
+  const code = yield call(waitForCodeReceived, {
     provider,
     expectedOrigin: selfOrigin,
+    expectedState: state,
   });
-
-  if (stateReturned !== state) {
-    throw new Error(`state mismatched, possibly compromised!: ${state}, ${stateReturned}`);
-  }
 
   authWin.postMessage({ provider, ack: 'ack' }, selfOrigin);
 
@@ -129,18 +123,15 @@ function waitForAckReceived({ provider, expectedOrigin }) {
   return new Promise((resolve) => {
     const onMessage = ({ data, origin }) => {
       if (origin !== expectedOrigin) return;
+      if (!data) return;
 
-      try {
-        const { provider: _provider, ack } = data;
+      const { provider: _provider, ack } = data;
 
-        if (_provider !== provider) return;
-        if (ack === 'ack') {
-          window.removeEventListener('message', onMessage);
-          resolve();
-        }
-      } catch (ex) {
-        console.error(ex);
-      }
+      if (_provider !== provider) return;
+      if (ack !== 'ack') return;
+
+      window.removeEventListener('message', onMessage);
+      resolve();
     };
 
     window.addEventListener('message', onMessage, false);
