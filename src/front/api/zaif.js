@@ -110,6 +110,11 @@ class OAuthAPI {
 }
 
 class PublicAPI {
+  static async fetchCurrencies() {
+    const data = await fetchAPI('https://api.zaif.jp/api/1/currencies/');
+    return data.map((currencyObj) => currencyObj.name);
+  }
+
   static async fetchCurrencyPairs() {
     const data = await fetchAPI('https://api.zaif.jp/api/1/currency_pairs/all');
     return data.map((pairObj) => pairObj.currency_pair);
@@ -206,6 +211,158 @@ class PrivateAPI {
         histories.forEach((history, idx) => {
           if (history.length > 0) {
             results.set(pairs[idx], history);
+          }
+        });
+
+        emitter.emit('end', results);
+      } catch (ex) {
+        emitter.emit('error', ex);
+      }
+    })();
+
+    return emitter;
+  }
+
+  async fetchWithdrawsOfCurrency({ currency, since = 0, end }) {
+    if (!this.token) {
+      throw new Error('Available token is needed.');
+    }
+
+    const withdrawals = await fetchAPI('https://api.zaif.jp/tapi', {
+      headers: {
+        token: this.token,
+      },
+      params: {
+        method: 'withdraw_history',
+        nonce: nonce.next(),
+        currency,
+        since,
+        end,
+      },
+    }, true);
+
+    return Object.entries(withdrawals)
+      .map(([withdrawalId, withdrawal]) => {
+        const transaction = {};
+
+        transaction.id = withdrawalId;
+        transaction.timestamp = withdrawal.timestamp;
+        transaction.action = 'withdraw';
+        transaction.amount = withdrawal.amount;
+        transaction.address = withdrawal.address;
+
+        return transaction;
+      });
+  }
+
+  fetchWithdrawls({ since = 0, end }) {
+    if (!this.token) {
+      throw new Error('Available token is needed.');
+    }
+
+    const emitter = new EventEmitter();
+
+    (async () => {
+      try {
+        const currencies = await PublicAPI.fetchCurrencies();
+        const total = currencies.length + 1; // add one to take `fetchCurrencies` into account
+        let done = 1;
+
+        emitter.emit('progress', { done, total });
+
+        const promises = currencies.map((currency) => this.fetchWithdrawsOfCurrency({
+          currency,
+          since,
+          end,
+        }).then((data) => {
+          done += 1;
+          emitter.emit('progress', { done, total });
+
+          return data;
+        }));
+
+        const histories = await Promise.all(promises);
+        const results = new Map();
+
+        histories.forEach((history, idx) => {
+          if (history.length > 0) {
+            results.set(currencies[idx], history);
+          }
+        });
+
+        emitter.emit('end', results);
+      } catch (ex) {
+        emitter.emit('error', ex);
+      }
+    })();
+
+    return emitter;
+  }
+
+  async fetchDepositsOfCurrency({ currency, since = 0, end }) {
+    if (!this.token) {
+      throw new Error('Available token is needed.');
+    }
+
+    const deposits = await fetchAPI('https://api.zaif.jp/tapi', {
+      headers: {
+        token: this.token,
+      },
+      params: {
+        method: 'deposit_history',
+        nonce: nonce.next(),
+        currency,
+        since,
+        end,
+      },
+    }, true);
+
+    return Object.entries(deposits)
+      .map(([depositId, deposit]) => {
+        const transaction = {};
+
+        transaction.id = depositId;
+        transaction.timestamp = deposit.timestamp;
+        transaction.action = 'deposit';
+        transaction.amount = deposit.amount;
+        transaction.address = deposit.address;
+
+        return transaction;
+      });
+  }
+
+  fetchDeposits({ since = 0, end }) {
+    if (!this.token) {
+      throw new Error('Available token is needed.');
+    }
+
+    const emitter = new EventEmitter();
+
+    (async () => {
+      try {
+        const currencies = await PublicAPI.fetchCurrencies();
+        const total = currencies.length + 1; // add one to take `fetchCurrencies` into account
+        let done = 1;
+
+        emitter.emit('progress', { done, total });
+
+        const promises = currencies.map((currency) => this.fetchDepositsOfCurrency({
+          currency,
+          since,
+          end,
+        }).then((data) => {
+          done += 1;
+          emitter.emit('progress', { done, total });
+
+          return data;
+        }));
+
+        const histories = await Promise.all(promises);
+        const results = new Map();
+
+        histories.forEach((history, idx) => {
+          if (history.length > 0) {
+            results.set(currencies[idx], history);
           }
         });
 

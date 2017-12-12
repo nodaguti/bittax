@@ -2,7 +2,7 @@ import { fork, take, put, takeEvery } from 'redux-saga/effects';
 import {
   REQUEST_OAUTH_INTEGRATION,
   OAUTH_TOKEN_FETCHED,
-  fetchTradesOfAllPairs,
+  fetchTransactions,
   appendNotification,
 } from '../../actions';
 import { intl } from '../i18n';
@@ -23,7 +23,8 @@ function* callFetchTokenAndTransactions({ payload: { provider } }) {
     message: intl().formatMessage(messages.completed, { provider }),
   }));
 
-  yield put(fetchTradesOfAllPairs({ provider }));
+  // the initial fetch
+  yield put(fetchTransactions({ provider }));
 }
 
 function* integrateViaOAuth() {

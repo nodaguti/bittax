@@ -19,10 +19,10 @@ export const oAuthPopupRedirected = createAction(OAUTH_POPUP_REDIRECTED);
 export const oAuthTokenFetched = createAction(OAUTH_TOKEN_FETCHED);
 export const refreshOAuthToken = createAction(REFRESH_OAUTH_TOKEN);
 
+export const FETCH_TRANSACTIONS = 'FETCH_TRANSACTIONS';
 export const TRANSACTIONS_FETCHED = 'TRANSACTIONS_FETCHED';
-export const FETCH_TRADES_OF_ALL_PAIRS = 'FETCH_TRADES_OF_ALL_PAIRS';
+export const fetchTransactions = createAction(FETCH_TRANSACTIONS);
 export const transactionsFetched = createAction(TRANSACTIONS_FETCHED);
-export const fetchTradesOfAllPairs = createAction(FETCH_TRADES_OF_ALL_PAIRS);
 
 export const APPEND_NOTIFICATION = 'APPEND_NOTIFICATION';
 export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION';
