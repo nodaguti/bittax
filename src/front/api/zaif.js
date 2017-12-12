@@ -134,7 +134,7 @@ class PrivateAPI {
     this.token = token;
   }
 
-  async fetchTrades({ currencyPair, since = 0, end }) {
+  async fetchTradesOfCurrencyPair({ currencyPair, since = 0, end }) {
     if (!this.token) {
       throw new Error('Available token is needed.');
     }
@@ -173,7 +173,7 @@ class PrivateAPI {
       });
   }
 
-  fetchTradesOfAllPairs({ since = 0, end }) {
+  fetchTrades({ since = 0, end }) {
     if (!this.token) {
       throw new Error('Available token is needed.');
     }
@@ -193,11 +193,10 @@ class PrivateAPI {
 
         emitter.emit('progress', { done, total });
 
-        const promises = pairs.map((pair) => this.fetchTrades({
-          token: this.token,
+        const promises = pairs.map((currencyPair) => this.fetchTradesOfCurrencyPair({
+          currencyPair,
           since,
           end,
-          currencyPair: pair,
         }).then((data) => {
           done += 1;
           emitter.emit('progress', { done, total });
