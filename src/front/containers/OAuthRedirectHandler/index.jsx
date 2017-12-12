@@ -3,9 +3,11 @@ import { connect } from 'react-redux';
 import {
   Panel,
   Box,
+  Text,
 } from 'rebass';
-import { FormattedMessage, intlShape } from 'react-intl';
+import { intlShape } from 'react-intl';
 import messages from './messages';
+import FormattedText from '../../components/FormattedText';
 import {
   oAuthPopupRedirected,
   emitError,
@@ -41,7 +43,9 @@ class OAuthRedirectHandler extends Component {
     return (
       <Panel color="blue">
         <Box p={2}>
-          <FormattedMessage {...messages.saving} />
+          <Text>
+            <FormattedText {...messages.saving} />
+          </Text>
         </Box>
       </Panel>
     );

@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import {
   Select,
 } from 'rebass';
-import { FormattedMessage } from 'react-intl';
 import messages from './messages';
+import FormattedText from '../../components/FormattedText';
 import i18nMessages from '../../i18n';
 import { setLocale } from '../../redux/actions';
 
@@ -26,9 +26,7 @@ const LocaleSelector = ({ locale, dispatch }) => {
       {
         locales.map((l) => (
           <option key={l} value={l}>
-            <FormattedMessage {...messages[l]}>
-              {(text) => text}
-            </FormattedMessage>
+            <FormattedText {...messages[l]} />
           </option>
         ))
       }

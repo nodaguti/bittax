@@ -6,8 +6,8 @@ import {
   Panel,
   PanelHeader,
 } from 'rebass';
-import { FormattedMessage } from 'react-intl';
 import messages from './messages';
+import FormattedText from '../../components/FormattedText';
 import {
   BlockButton,
   BlockButtonOutline,
@@ -29,14 +29,14 @@ class SourceList extends Component {
 
     return isConnected ? (
       <BlockButton my={2}>
-        <FormattedMessage {...messages.oAuthConnected} />
+        <FormattedText {...messages.oAuthConnected} />
       </BlockButton>
     ) : (
       <BlockButtonOutline
         my={2}
         onClick={() => dispatch(requestOAuthIntegration({ provider: id }))}
       >
-        <FormattedMessage {...messages.connectViaOAuth} />
+        <FormattedText {...messages.connectViaOAuth} />
       </BlockButtonOutline>
     );
   }
@@ -51,7 +51,7 @@ class SourceList extends Component {
         my={2}
         onClick={() => history.push(`/integrate/api/${id}`)}
       >
-        <FormattedMessage {...messages.connectViaAPIKey} />
+        <FormattedText {...messages.connectViaAPIKey} />
       </BlockButtonOutline>
     );
   }
@@ -66,7 +66,7 @@ class SourceList extends Component {
         my={2}
         onClick={() => history.push(`/sources/add/${id}`)}
       >
-        <FormattedMessage {...messages.importFromCSV} />
+        <FormattedText {...messages.importFromCSV} />
       </BlockButtonOutline>
     );
   }

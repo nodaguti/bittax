@@ -9,6 +9,7 @@ import {
 import Hide from 'hidden-styled';
 import { LinkContainer } from 'react-router-bootstrap';
 import { FormattedMessage } from 'react-intl';
+import FormattedText from '../FormattedText';
 import messages from './messages';
 import LocaleSelector from '../../containers/LocaleSelector';
 
@@ -47,7 +48,7 @@ const Footer = () => (
             }}
           />
         </Text>
-        <Text mt={3}><FormattedMessage {...messages.disclaimer} /></Text>
+        <Text mt={3}><FormattedText {...messages.disclaimer} /></Text>
         <Text mt={3}>Bittax &copy; 2017 nodaguti.</Text>
       </Box>
     </Toolbar>

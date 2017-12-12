@@ -10,8 +10,9 @@ import MdDashboard from 'react-icons/lib/md/dashboard';
 import MdHistory from 'react-icons/lib/md/history';
 import MdAttachMoney from 'react-icons/lib/md/attach-money';
 import { LinkContainer } from 'react-router-bootstrap';
-import { FormattedMessage, intlShape } from 'react-intl';
+import { intlShape } from 'react-intl';
 import messages from './messages';
+import FormattedText from '../FormattedText';
 import BottomTooltip from '../BottomTooltip';
 import ToolbarIcon from '../ToolbarIcon';
 import ActivityPanelPopover from '../../containers/ActivityPanelPopover';
@@ -60,17 +61,17 @@ const NormalNavbar = (_, { intl }) => {
 
       <LinkContainer to="/dashboard">
         <NavLink>
-          <FormattedMessage {...messages.dashboard} />
+          <FormattedText {...messages.dashboard} />
         </NavLink>
       </LinkContainer>
       <LinkContainer to="/">
         <NavLink>
-          <FormattedMessage {...messages.tradeHistories} />
+          <FormattedText {...messages.tradeHistories} />
         </NavLink>
       </LinkContainer>
       <LinkContainer to="/sources">
         <NavLink>
-          <FormattedMessage {...messages.exchanges} />
+          <FormattedText {...messages.exchanges} />
         </NavLink>
       </LinkContainer>
       <LinkContainer to="/sources">
