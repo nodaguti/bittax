@@ -111,7 +111,7 @@ class OAuthAPI {
 
 class PublicAPI {
   static async fetchCurrencies() {
-    const data = await fetchAPI('https://api.zaif.jp/api/1/currencies/');
+    const data = await fetchAPI('https://api.zaif.jp/api/1/currencies/all');
     return data.map((currencyObj) => currencyObj.name);
   }
 
