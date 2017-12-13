@@ -1,14 +1,10 @@
-import Bottleneck from 'bottleneck';
-import fetch from 'isomorphic-fetch';
 import moment from 'moment';
 import { Map } from 'immutable';
 import { monkey as useRound } from 'moment-round';
 import { last } from 'lodash-es';
-import { URLSearchParams } from 'url';
+import fetch from './fetch';
 
 useRound(moment);
-
-const limiter = new Bottleneck(5, 3100); // 6000 requests per hour
 
 class Cache {
   cache = new Map();
@@ -32,19 +28,7 @@ class Cache {
 
 const cache = new Cache();
 
-const fetchAPI = async (url, { params, ...opts } = {}) => {
-  const searchParams = new URLSearchParams(params);
-  const res = await limiter.schedule(fetch, `${url}?${searchParams.toString()}`, opts);
-  const json = await res.json();
-
-  if (json.Reponse !== 'Success') {
-    throw new Error(`${json.Message}: type ${json.Type}`);
-  }
-
-  return json.Data;
-};
-
-class PublicAPI {
+export default class Public {
   static async fetchPriceAt({
     base,
     quoted,
@@ -62,7 +46,7 @@ class PublicAPI {
       return Promise.resolve(price);
     }
 
-    const data = await fetchAPI('https://min-api.cryptocompare.com/data/histohour', {
+    const data = await fetch('https://min-api.cryptocompare.com/data/histohour', {
       params: {
         fsym: base.toUpperCase(base),
         tsym: quoted.toUpperCase(quoted),
@@ -97,7 +81,3 @@ class PublicAPI {
     return pricesAtTheTime.close;
   }
 }
-
-export default {
-  public: PublicAPI,
-};

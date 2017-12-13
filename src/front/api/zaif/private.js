@@ -1,156 +1,10 @@
 import { EventEmitter } from 'events';
-import Bottleneck from 'bottleneck';
-import uuidv4 from 'uuid/v4';
-import { merge } from 'lodash-es';
 import { Map } from 'immutable';
-import Nonce from './utils/nonce';
-import fetch from './utils/proxied-fetch';
+import PublicAPI from './public';
+import fetch from './fetch';
+import { parseCurrencyPair } from './utils';
 
-const CLIENT_ID = '08b30c2a9afb48d6be42a511f9186cc3';
-const CLIENT_SECRET = 'c7a70886878c4aa0bbd7afa815de35bc';
-
-const fetchLimiter = new Bottleneck(1, 3500);
-const enqueueLimiter = new Bottleneck(1);
-const nonce = new Nonce();
-
-const parseCurrencyPair = (currencyPair) => {
-  const [base, quoted] = currencyPair.toLowerCase().split('_');
-  return { base, quoted };
-};
-
-/**
- * This func should be called via `enqueueLimiter#schedule`
- * to make sure `nonce#next` is never executed concurrently
- */
-const enqueueFetch = (url, { params, ...opts } = {}, isPrivate = false) => {
-  if (isPrivate) {
-    const n = nonce.next() / 1e14;
-
-    // eslint-disable-next-line no-param-reassign
-    params = Object.assign({}, params, { nonce: n });
-  }
-
-  if (params) {
-    const searchParams = new URLSearchParams(params);
-
-    // eslint-disable-next-line no-param-reassign
-    opts = merge({}, opts, {
-      method: 'POST',
-      body: searchParams,
-    });
-  }
-
-  return fetchLimiter.schedule(fetch, url, opts);
-};
-
-const fetchAPI = async (url, { params, ...opts } = {}, isPrivate = false) => {
-  const req = enqueueLimiter.schedule(enqueueFetch, url, { params, ...opts }, isPrivate);
-  const res = await req;
-  const resForErrorHandling = res.clone();
-
-  try {
-    const json = await res.json();
-
-    if (!isPrivate) {
-      return json;
-    }
-
-    if (json.success !== 1) {
-      const retryableMessages = [
-        'time wait restriction, please try later.',
-        'nonce not incremented',
-      ];
-      const message = json.return || res.headers.get('x-message');
-
-      if (retryableMessages.includes(message)) {
-        console.warn(`Retry: "${message}" from ${url} (params: ${JSON.stringify({ params, ...opts })})`);
-        return fetchAPI(url, { params, ...opts }, isPrivate);
-      }
-
-      throw new Error(`Server Error: ${message}`);
-    }
-
-    return json.return;
-  } catch (ex) {
-    const text = await resForErrorHandling.text();
-
-    if (text.includes('Bad Gateway')) {
-      console.warn(`Retry: Got the following from ${url} (params: ${JSON.stringify({ params, ...opts })}):\n\n${text}`);
-      return fetchAPI(url, { params, ...opts }, isPrivate);
-    }
-
-    console.error(`Got the following from ${url} (params: ${JSON.stringify({ params, ...opts })}):\n\n${text}`);
-    throw ex;
-  }
-};
-
-class OAuthAPI {
-  static openAuthWindow() {
-    const url = 'https://zaif.jp/oauth';
-    const state = uuidv4();
-    const params = {
-      client_id: CLIENT_ID,
-      response_type: 'code',
-      scope: 'info',
-      state,
-      redirect_uri: `${window.location.origin}/oauth/zaif`,
-    };
-    const searchParams = new URLSearchParams(params);
-    const authWin = window.open(`${url}?${searchParams.toString()}`);
-
-    return { state, authWin };
-  }
-
-  static async fetchToken({ code }) {
-    const data = await fetchAPI('https://oauth.zaif.jp/v1/token', {
-      params: {
-        grant_type: 'authorization_code',
-        code,
-        client_id: CLIENT_ID,
-        client_secret: CLIENT_SECRET,
-        redirect_uri: `${window.location.origin}/oauth/zaif`,
-      },
-    });
-
-    return {
-      state: data.state,
-      token: data.access_token,
-      refreshToken: data.refresh_token,
-      expire: Date.now() + (Number(data.expires_in) * 1000),
-    };
-  }
-
-  static async refreshToken({ refreshToken }) {
-    const data = await fetchAPI('https://oauth.zaif.jp/v1/refresh_token', {
-      params: {
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken,
-        client_id: CLIENT_ID,
-        client_secret: CLIENT_SECRET,
-      },
-    });
-
-    return {
-      token: data.access_token,
-      refreshToken: data.refresh_token,
-      expire: Date.now() + (Number(data.expires_in) * 1000),
-    };
-  }
-}
-
-class PublicAPI {
-  static async fetchCurrencies() {
-    const data = await fetchAPI('https://api.zaif.jp/api/1/currencies/all');
-    return data.map((currencyObj) => currencyObj.name);
-  }
-
-  static async fetchCurrencyPairs() {
-    const data = await fetchAPI('https://api.zaif.jp/api/1/currency_pairs/all');
-    return data.map((pairObj) => pairObj.currency_pair);
-  }
-}
-
-class PrivateAPI {
+export default class Private {
   token = null;
 
   constructor(token) {
@@ -168,7 +22,7 @@ class PrivateAPI {
       throw new Error('Available token is needed.');
     }
 
-    const trades = await fetchAPI('https://api.zaif.jp/tapi', {
+    const trades = await fetch('https://api.zaif.jp/tapi', {
       headers: {
         token: this.token,
       },
@@ -252,7 +106,7 @@ class PrivateAPI {
       throw new Error('Available token is needed.');
     }
 
-    const withdrawals = await fetchAPI('https://api.zaif.jp/tapi', {
+    const withdrawals = await fetch('https://api.zaif.jp/tapi', {
       headers: {
         token: this.token,
       },
@@ -324,7 +178,7 @@ class PrivateAPI {
       throw new Error('Available token is needed.');
     }
 
-    const deposits = await fetchAPI('https://api.zaif.jp/tapi', {
+    const deposits = await fetch('https://api.zaif.jp/tapi', {
       headers: {
         token: this.token,
       },
@@ -391,9 +245,3 @@ class PrivateAPI {
     return emitter;
   }
 }
-
-export default {
-  oAuth: OAuthAPI,
-  public: PublicAPI,
-  private: new PrivateAPI(),
-};
