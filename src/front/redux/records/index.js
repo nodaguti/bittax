@@ -49,5 +49,5 @@ export const Transaction = new Record({
   commission: {
     jpy: 0,
   },
-  address: 0,
+  address: '',
 }, 'transaction');
