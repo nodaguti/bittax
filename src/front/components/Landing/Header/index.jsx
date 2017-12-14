@@ -8,14 +8,15 @@ import {
   ButtonOutline,
   Link,
 } from 'rebass';
+import { Link as RouterLink } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { LinkContainer } from 'react-router-bootstrap';
 import FormattedText from '../../FormattedText';
 import messages from './messages';
 
 const photo = 'https://images.unsplash.com/photo-1500316124030-4cffa46f10f0?auto=format&fit=crop&w=1950&q=80';
 
 const Btn = styled(ButtonOutline)`
+  display: inline-block;
   color: white;
   background-color: transparent;
 
@@ -49,15 +50,15 @@ const Header = () => (
       </Lead>
     </Flex>
     <Flex wrap py={5} my={5} align="center" column>
-      <LinkContainer to="/dashboard">
-        <Btn
-          f={3}
-          mx={3}
-          py={3}
-        >
-          <FormattedText {...messages.startBtn} />
-        </Btn>
-      </LinkContainer>
+      <Btn
+        is={RouterLink}
+        to="/dashboard"
+        f={3}
+        mx={3}
+        py={3}
+      >
+        <FormattedText {...messages.startBtn} />
+      </Btn>
       <Lead
         f={1}
         mx={3}
@@ -69,18 +70,24 @@ const Header = () => (
           {...messages.agreeToTerms}
           values={{
             linkToTerms: (
-              <LinkContainer to="/terms">
-                <Link href="/terms" color="gray">
-                  <FormattedText {...messages.terms} />
-                </Link>
-              </LinkContainer>
+              <Link
+                is={RouterLink}
+                to="/terms"
+                href="/terms"
+                color="gray"
+              >
+                <FormattedText {...messages.terms} />
+              </Link>
             ),
             linkToPrivacy: (
-              <LinkContainer to="/privacy">
-                <Link href="/privacy" color="gray">
-                  <FormattedText {...messages.privacyPolicy} />
-                </Link>
-              </LinkContainer>
+              <Link
+                is={RouterLink}
+                to="/privacy"
+                href="/privacy"
+                color="gray"
+              >
+                <FormattedText {...messages.privacyPolicy} />
+              </Link>
             ),
           }}
         />

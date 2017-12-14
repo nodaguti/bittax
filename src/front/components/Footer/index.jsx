@@ -6,8 +6,7 @@ import {
   NavLink,
   Link,
 } from 'rebass';
-import Hide from 'hidden-styled';
-import { LinkContainer } from 'react-router-bootstrap';
+import { Link as RouterLink } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import FormattedText from '../FormattedText';
 import messages from './messages';
@@ -16,15 +15,27 @@ import LocaleSelector from '../../containers/LocaleSelector';
 const Footer = () => (
   <Box f={1}>
     <Toolbar>
-      <LinkContainer to="/landing">
-        <NavLink>About</NavLink>
-      </LinkContainer>
-      <LinkContainer to="/terms">
-        <NavLink>Terms</NavLink>
-      </LinkContainer>
-      <LinkContainer to="/privacy">
-        <NavLink>Privacy</NavLink>
-      </LinkContainer>
+      <NavLink
+        is={RouterLink}
+        to="/landing"
+        href="/landing"
+      >
+        About
+      </NavLink>
+      <NavLink
+        is={RouterLink}
+        to="/terms"
+        href="/terms"
+      >
+        Terms
+      </NavLink>
+      <NavLink
+        is={RouterLink}
+        to="/privacy"
+        href="/privacy"
+      >
+        Privacy
+      </NavLink>
       <Box ml="auto" f={2} color="black" bg="white">
         <LocaleSelector />
       </Box>

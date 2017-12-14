@@ -1,15 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { Link as RouterLink } from 'react-router-dom';
 import {
+  Box,
   Toolbar,
   NavLink,
 } from 'rebass';
 import Hide from 'hidden-styled';
 import FaPlus from 'react-icons/lib/fa/plus';
 import MdDashboard from 'react-icons/lib/md/dashboard';
-import MdHistory from 'react-icons/lib/md/history';
 import MdAttachMoney from 'react-icons/lib/md/attach-money';
-import { LinkContainer } from 'react-router-bootstrap';
 import { intlShape } from 'react-intl';
 import messages from './messages';
 import FormattedText from '../FormattedText';
@@ -17,94 +16,68 @@ import BottomTooltip from '../BottomTooltip';
 import ToolbarIcon from '../ToolbarIcon';
 import ActivityPanelPopover from '../../containers/ActivityPanelPopover';
 
-const MobileNavbar = () => (
-  <Toolbar>
-    <LinkContainer to="/">
-      <NavLink f={4}>Bittax</NavLink>
-    </LinkContainer>
-
-    <LinkContainer to="/dashboard">
-      <NavLink>
-        <ToolbarIcon><MdDashboard color="white" /></ToolbarIcon>
-      </NavLink>
-    </LinkContainer>
-    <LinkContainer to="/">
-      <NavLink>
-        <ToolbarIcon><MdHistory color="white" /></ToolbarIcon>
-      </NavLink>
-    </LinkContainer>
-    <LinkContainer to="/sources">
-      <NavLink>
-        <ToolbarIcon><MdAttachMoney color="white" /></ToolbarIcon>
-      </NavLink>
-    </LinkContainer>
-    <LinkContainer to="/sources">
-      <NavLink ml="auto">
-        <ToolbarIcon><FaPlus color="white" /></ToolbarIcon>
-      </NavLink>
-    </LinkContainer>
-    <NavLink>
-      <ActivityPanelPopover />
-    </NavLink>
-  </Toolbar>
-);
-
-const NormalNavbar = (_, { intl }) => {
-  const { formatMessage } = intl;
+const Navbar = (_, { intl: { formatMessage } }) => {
   const addExchangeText = formatMessage(messages.addExchange);
 
   return (
-    <Toolbar>
-      <LinkContainer to="/">
-        <NavLink f={4}>Bittax</NavLink>
-      </LinkContainer>
+    <Box>
+      <Toolbar>
+        <NavLink
+          is={RouterLink}
+          to="/"
+          href="/"
+          f={4}
+        >
+          Bittax
+        </NavLink>
+        <NavLink
+          is={RouterLink}
+          to="/dashboard"
+          href="/dashboard"
+        >
+          <Hide sm md lg>
+            <ToolbarIcon><MdDashboard color="white" /></ToolbarIcon>
+          </Hide>
+          <Hide xs>
+            <FormattedText {...messages.dashboard} />
+          </Hide>
+        </NavLink>
+        <NavLink
+          is={RouterLink}
+          to="/sources"
+          href="/sources"
+        >
+          <Hide sm md lg>
+            <ToolbarIcon><MdAttachMoney color="white" /></ToolbarIcon>
+          </Hide>
+          <Hide xs>
+            <FormattedText {...messages.exchanges} />
+          </Hide>
+        </NavLink>
 
-      <LinkContainer to="/dashboard">
-        <NavLink>
-          <FormattedText {...messages.dashboard} />
-        </NavLink>
-      </LinkContainer>
-      <LinkContainer to="/">
-        <NavLink>
-          <FormattedText {...messages.tradeHistories} />
-        </NavLink>
-      </LinkContainer>
-      <LinkContainer to="/sources">
-        <NavLink>
-          <FormattedText {...messages.exchanges} />
-        </NavLink>
-      </LinkContainer>
-      <LinkContainer to="/sources">
-        <BottomTooltip text={addExchangeText} ml="auto">
-          <NavLink>
+        <BottomTooltip
+          text={addExchangeText}
+          ml="auto"
+        >
+          <NavLink
+            is={RouterLink}
+            to="/sources"
+            href="/sources"
+          >
             <ToolbarIcon><FaPlus color="white" /></ToolbarIcon>
           </NavLink>
         </BottomTooltip>
-      </LinkContainer>
-      <NavLink>
-        <ActivityPanelPopover />
-      </NavLink>
-    </Toolbar>
-  );
+        <NavLink>
+          <ActivityPanelPopover />
+        </NavLink>
+      </Toolbar>
+    </Box>
+  )
 };
 
-// Allow NormalNavbar to reference `context`.
-NormalNavbar.contextTypes = {
+// Allow Navbar to reference `context`.
+Navbar.contextTypes = {
   intl: intlShape,
 };
-
-const Navbar = () => (
-  <div>
-    {/* For xs screens */}
-    <Hide sm md lg>
-      <MobileNavbar />
-    </Hide>
-
-    {/* For other screens */}
-    <Hide xs>
-      <NormalNavbar />
-    </Hide>
-  </div>
-);
 
 export default Navbar;
