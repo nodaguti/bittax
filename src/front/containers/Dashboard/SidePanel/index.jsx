@@ -9,6 +9,7 @@ import {
   Link,
   withRouter,
 } from 'react-router-dom';
+import { getProviderName } from '../../../providers';
 import FormattedText from '../../../components/FormattedText';
 import messages from './messages';
 
@@ -88,7 +89,7 @@ const SidePanel = ({ providers, coins, location: { pathname } }) => (
               href={`/dashboard/providers/${provider}`}
               active={pathname === `/dashboard/providers/${provider}`}
             >
-              {provider}
+              {getProviderName(provider)}
             </LinkGroupItem>
           ))
         }
@@ -105,7 +106,7 @@ const SidePanel = ({ providers, coins, location: { pathname } }) => (
               href={`/dashboard/coins/${coin}`}
               active={pathname === `/dashboard/coins/${coin}`}
             >
-              {coin}
+              {coin.toUpperCase()}
             </LinkGroupItem>
           ))
         }

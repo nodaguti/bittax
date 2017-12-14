@@ -12,6 +12,7 @@ import {
   oAuthPopupRedirected,
   emitError,
 } from '../../redux/actions';
+import { getProviderName } from '../../providers';
 
 class OAuthRedirectHandler extends Component {
   // Allow the component to reference `context`.
@@ -22,6 +23,7 @@ class OAuthRedirectHandler extends Component {
   componentDidMount() {
     const { match, dispatch } = this.props;
     const { provider } = match.params;
+    const providerName = getProviderName(provider);
     const { formatMessage } = this.context.intl;
 
     try {
@@ -33,7 +35,7 @@ class OAuthRedirectHandler extends Component {
     } catch (ex) {
       dispatch(emitError({
         name: formatMessage(messages.authenticationError),
-        message: formatMessage(messages.authenticationErrorMessage, { provider }),
+        message: formatMessage(messages.authenticationErrorMessage, { provider: providerName }),
         details: ex,
       }));
     }

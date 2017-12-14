@@ -8,14 +8,16 @@ import {
 } from '../../actions';
 import APIs from '../../../api';
 import fetchWithRequestHandling from '../utils';
+import { getProviderName } from '../../../providers';
 import { intl } from '../i18n';
 import messages from './messages';
 
 function* callPrivateAPI({ provider, operation }, ...args) {
   const api = APIs[provider];
   const methodName = camelCase(`fetch-${operation}`);
+  const providerName = getProviderName(provider);
   const activityId = `${provider}-${operation}-${Date.now()}`;
-  const activityTitle = intl().formatMessage(messages[methodName], { provider });
+  const activityTitle = intl().formatMessage(messages[methodName], { provider: providerName });
 
   return yield call(
     fetchWithRequestHandling,
@@ -60,9 +62,11 @@ function* callFetchTransactions({ payload: { provider } }) {
       lastFetchedAt: now,
     }));
   } catch (ex) {
+    const providerName = getProviderName(provider);
+
     yield put(emitError({
       name: intl().formatMessage(messages.connectionError),
-      message: intl().formatMessage(messages.connectionErrorMessage, { provider }),
+      message: intl().formatMessage(messages.connectionErrorMessage, { provider: providerName }),
       details: ex,
     }));
   }

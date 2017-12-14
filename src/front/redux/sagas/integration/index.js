@@ -5,6 +5,7 @@ import {
   fetchTransactions,
   appendNotification,
 } from '../../actions';
+import { getProviderName } from '../../../providers';
 import { intl } from '../i18n';
 import messages from './messages';
 
@@ -18,9 +19,11 @@ function* callFetchTokenAndTransactions({ payload: { provider } }) {
     }
   }
 
+  const providerName = getProviderName(provider);
+
   yield put(appendNotification({
     id: `${provider}-integration-completed`,
-    message: intl().formatMessage(messages.completed, { provider }),
+    message: intl().formatMessage(messages.completed, { provider: providerName }),
   }));
 
   // the initial fetch

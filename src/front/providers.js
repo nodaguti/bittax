@@ -1,16 +1,22 @@
-import camelCase from 'camel-case';
+import { Map } from 'immutable';
 
-export default [
-  {
-    id: camelCase('Zaif'),
+const providers = new Map({
+  zaif: {
+    id: 'zaif',
     name: 'Zaif',
     oauth: true,
     csv: true,
   },
-  {
-    id: camelCase('BitFlyer'),
+  bitFlyer: {
+    id: 'bitFlyer',
     name: 'BitFlyer',
     api: true,
     csv: true,
   },
-];
+});
+
+export default providers;
+
+export function getProviderName(id) {
+  return providers.get(id).name;
+}
