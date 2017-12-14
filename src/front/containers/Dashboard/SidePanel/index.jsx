@@ -38,7 +38,13 @@ const LinkGroupTitle = styled((props) => (
 }));
 
 const LinkGroup = ({ name, children, ...props }) => (
-  <Box w={[1 / 3, 1]}>
+  <Box
+    w={[
+      1 / 3,
+      1 / 3,
+      1,
+    ]}
+  >
     <LinkGroupTitle {...props}>{name}</LinkGroupTitle>
     <Box>
       {children}

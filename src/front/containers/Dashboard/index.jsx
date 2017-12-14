@@ -19,7 +19,9 @@ const mapStateToProps = (state) => ({
 });
 
 const StickySide = styled(Box)`
-  @media screen and (min-width: 32em) {
+  border-bottom: ${(props) => props.theme.colors.gray5} 1px solid;
+
+  @media screen and (min-width: ${(props) => props.theme.breakpoints[1]}em) {
     flex: none;
     order: 0;
     display: block;
@@ -29,6 +31,7 @@ const StickySide = styled(Box)`
     left: 0;
     height: 100vh;
     overflow: auto;
+    border: none;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px;
   }
 `;
@@ -55,11 +58,21 @@ const Dashboard = ({ transaction, match }) => {
 
   return (
     <Flex wrap>
-      <StickySide w={[1, 192]}>
+      <StickySide
+        w={[
+          1,
+          1,
+          192,
+        ]}
+      >
         <SidePanel providers={providers} coins={coins} />
       </StickySide>
       <Box
-        w={[1, 'calc(100% - 192px)']}
+        w={[
+          1,
+          1,
+          'calc(100% - 192px)',
+        ]}
         py={3}
       >
         <Container>
