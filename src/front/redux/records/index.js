@@ -50,4 +50,10 @@ export const Transaction = new Record({
     jpy: 0,
   },
   address: '',
+  reports: {
+    all: {
+      averageCost: 0,
+      gain: 0,
+    },
+  },
 }, 'transaction');

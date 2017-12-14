@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
+  Redirect,
 } from 'react-router-dom';
 import styled from 'styled-components';
 import {
@@ -18,6 +19,7 @@ import Home from '../../containers/Home';
 import Landing from '../Landing';
 import Error from '../../containers/Error';
 import NotificationList from '../../containers/NotificationList';
+import Dashboard from '../../containers/Dashboard';
 import SourceList from '../../containers/SourceList';
 import SourceImporter from '../../containers/SourceImporter';
 import ApiIntegrator from '../../containers/ApiIntegrator';
@@ -62,6 +64,24 @@ const App = () => (
                   <NotificationList />
 
                   <Switch>
+                    <Redirect
+                      from="/dashboard"
+                      exact
+                      strict
+                      to="/dashboard/all"
+                    />
+                    <Route
+                      path="/dashboard/:type"
+                      exact
+                      strict
+                      component={Dashboard}
+                    />
+                    <Route
+                      path="/dashboard/:type/:filter"
+                      exact
+                      strict
+                      component={Dashboard}
+                    />
                     <Route
                       path="/sources"
                       exact
