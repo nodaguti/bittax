@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
+  Container,
   Flex,
   Box,
   Panel,
@@ -107,9 +108,11 @@ class SourceList extends Component {
 
   render() {
     return (
-      <Flex wrap>
-        {providers.map((provider) => this.renderPanel(provider))}
-      </Flex>
+      <Container py={3}>
+        <Flex wrap>
+          {providers.map((provider) => this.renderPanel(provider))}
+        </Flex>
+      </Container>
     );
   }
 }

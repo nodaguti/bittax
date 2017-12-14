@@ -59,10 +59,11 @@ const App = () => (
                 component={Landing}
               />
               <Route>
-                <Container>
-                  <Error />
-                  <NotificationList />
-
+                <Box>
+                  <Container>
+                    <Error />
+                    <NotificationList />
+                  </Container>
                   <Switch>
                     <Redirect
                       from="/dashboard"
@@ -105,7 +106,7 @@ const App = () => (
                       component={OAuthRedirectHandler}
                     />
                   </Switch>
-                </Container>
+                </Box>
               </Route>
             </Switch>
           </Box>
