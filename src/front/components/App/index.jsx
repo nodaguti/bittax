@@ -74,13 +74,11 @@ const App = () => (
                     <Route
                       path="/dashboard/:type"
                       exact
-                      strict
                       component={Dashboard}
                     />
                     <Route
                       path="/dashboard/:type/:filter"
                       exact
-                      strict
                       component={Dashboard}
                     />
                     <Route
