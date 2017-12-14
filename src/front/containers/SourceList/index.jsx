@@ -110,7 +110,12 @@ class SourceList extends Component {
     return (
       <Container py={3}>
         <Flex wrap>
-          {providers.map((provider) => this.renderPanel(provider))}
+          {
+            providers
+              .map((provider) => this.renderPanel(provider))
+              .valueSeq()
+              .toArray()
+          }
         </Flex>
       </Container>
     );
