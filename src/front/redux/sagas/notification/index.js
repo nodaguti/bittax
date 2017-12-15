@@ -3,17 +3,15 @@ import {
   ROUTE_CHANGED,
   removeNotifications,
 } from '../../actions';
+import { getEphemeralNotificationIds } from '../../../selectors/notificationSelectors';
 
 function* clearEphemeralNotificationsOnRouteChanged() {
   while (true) {
     yield take(ROUTE_CHANGED);
 
-    const notifications = select((state) => state.notifications);
-    const idsToRemove = notifications
-      .filter((item) => item.ephemeral)
-      .keySeq();
+    const ephemeralNotifications = yield select(getEphemeralNotificationIds);
 
-    yield put(removeNotifications(idsToRemove));
+    yield put(removeNotifications(ephemeralNotifications));
   }
 }
 
