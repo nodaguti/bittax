@@ -33,14 +33,12 @@ export const OAuthToken = new Record({
   expire: 0,
 }, 'oauth-token');
 
-export const Transactions = new Record({
-  fetchedAt: 0,
-  transactions: new Map(), // [currency_pair]: OrderedMap<[id]: Transaction>
-}, 'transactions');
-
 export const Transaction = new Record({
-  id: '',
-  timestamp: 0,
+  provider: '',
+  id: '', // provider-specific id
+  timestamp: 0, // Unix Timestamp [ms]
+  base: '',
+  quoted: '',
   action: '', // bid, ask, withdraw, deposit
   amount: 0,
   price: {
@@ -51,9 +49,17 @@ export const Transaction = new Record({
   },
   address: '',
   reports: {
-    all: {
+    provider: {
       averageCost: 0,
-      gain: 0,
+      totalAmount: 0,
+      totalCost: 0,
+      totalGain: 0,
+    },
+    coin: {
+      averageCost: 0,
+      totalAmount: 0,
+      totalCost: 0,
+      totalGain: 0,
     },
   },
 }, 'transaction');

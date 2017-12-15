@@ -3,6 +3,10 @@ import { Map } from 'immutable';
 import PublicAPI from './public';
 import fetch from './fetch';
 import { parseCurrencyPair } from './utils';
+import providers from '../../providers';
+import { Transaction } from '../../redux/records';
+
+const providerId = providers.zaif.id;
 
 export default class Private {
   token = null;
@@ -36,22 +40,21 @@ export default class Private {
     const { base, quoted } = parseCurrencyPair(currencyPair);
 
     return Object.entries(trades)
-      .map(([orderId, trade]) => {
-        const transaction = {};
-
-        transaction.id = orderId;
-        transaction.timestamp = trade.timestamp;
-        transaction.action = trade.action;
-        transaction.amount = trade.amount;
-        transaction.price = {
+      .map(([orderId, trade]) => (new Transaction({
+        provider: providerId,
+        id: orderId,
+        timestamp: trade.timestamp * 1000,
+        base,
+        quoted,
+        action: trade.action.toLowerCase(),
+        amount: trade.amount,
+        price: {
           [quoted]: trade.price,
-        };
-        transaction.commission = {
+        },
+        commission: {
           [base]: trade.fee - trade.bonus,
-        };
-
-        return transaction;
-      });
+        },
+      })));
   }
 
   fetchTrades(_, { lastFetchedAt } = {}) {
@@ -86,11 +89,19 @@ export default class Private {
         }));
 
         const histories = await Promise.all(promises);
-        const results = new Map(histories.map((history, idx) => {
-          if (!history.length) return null;
+        const results = (Map()).withMutations((mutableMap) => {
+          histories.forEach((history, idx) => {
+            if (!history.length) return;
 
-          return [pairs[idx], history];
-        }).filter((tuple) => tuple !== null));
+            const { base } = parseCurrencyPair(pairs[idx]);
+
+            if (!mutableMap.has(base)) {
+              mutableMap.set(base, history);
+            } else {
+              mutableMap.update(base, (list) => list.concat(history));
+            }
+          });
+        });
 
         emitter.emit('end', results);
       } catch (ex) {
@@ -118,17 +129,15 @@ export default class Private {
     }, true);
 
     return Object.entries(withdrawals)
-      .map(([withdrawalId, withdrawal]) => {
-        const transaction = {};
-
-        transaction.id = withdrawalId;
-        transaction.timestamp = withdrawal.timestamp;
-        transaction.action = 'withdraw';
-        transaction.amount = withdrawal.amount;
-        transaction.address = withdrawal.address;
-
-        return transaction;
-      });
+      .map(([withdrawalId, withdrawal]) => (new Transaction({
+        provider: providerId,
+        id: withdrawalId,
+        timestamp: withdrawal.timestamp * 1000,
+        base: currency,
+        action: 'withdraw',
+        amount: withdrawal.amount,
+        address: withdrawal.address,
+      })));
   }
 
   fetchWithdrawals(_, { lastFetchedAt } = {}) {
@@ -158,11 +167,13 @@ export default class Private {
         }));
 
         const histories = await Promise.all(promises);
-        const results = new Map(histories.map((history, idx) => {
-          if (!history.length) return null;
+        const results = (Map()).withMutations((mutableMap) => {
+          histories.forEach((history, idx) => {
+            if (!history.length) return;
 
-          return [currencies[idx], history];
-        }).filter((tuple) => tuple !== null));
+            mutableMap.set(currencies[idx], history);
+          });
+        });
 
         emitter.emit('end', results);
       } catch (ex) {
@@ -190,17 +201,15 @@ export default class Private {
     }, true);
 
     return Object.entries(deposits)
-      .map(([depositId, deposit]) => {
-        const transaction = {};
-
-        transaction.id = depositId;
-        transaction.timestamp = deposit.timestamp;
-        transaction.action = 'deposit';
-        transaction.amount = deposit.amount;
-        transaction.address = deposit.address;
-
-        return transaction;
-      });
+      .map(([depositId, deposit]) => (new Transaction({
+        provider: providerId,
+        id: depositId,
+        timestamp: deposit.timestamp * 1000,
+        base: currency,
+        action: 'deposit',
+        amount: deposit.amount,
+        address: deposit.address,
+      })));
   }
 
   fetchDeposits(_, { lastFetchedAt } = {}) {
@@ -230,11 +239,13 @@ export default class Private {
         }));
 
         const histories = await Promise.all(promises);
-        const results = new Map(histories.map((history, idx) => {
-          if (!history.length) return null;
+        const results = (Map()).withMutations((mutableMap) => {
+          histories.forEach((history, idx) => {
+            if (!history.length) return;
 
-          return [currencies[idx], history];
-        }).filter((tuple) => tuple !== null));
+            mutableMap.set(currencies[idx], history);
+          });
+        });
 
         emitter.emit('end', results);
       } catch (ex) {

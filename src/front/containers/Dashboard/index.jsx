@@ -15,7 +15,7 @@ import ProviderDashboard from './Provider';
 import CoinDashboard from './Coin';
 
 const mapStateToProps = (state) => ({
-  transaction: state.transaction,
+  transactions: state.transactions,
 });
 
 const StickySide = styled(Box)`
@@ -36,25 +36,17 @@ const StickySide = styled(Box)`
   }
 `;
 
-const getProviders = (transaction) => transaction.keySeq();
+const getProviders = (transactions) => transactions.fetchedAt.keySeq();
 
-const getCoins = (transaction) => (
-  transaction.reduce((coins, transactionsRecord) => (
-    coins.concat(transactionsRecord
-      .transactions
-      .keySeq()
-      .map((currencyPair) => currencyPair.split('_')[0]))
-      .toSet()
-  ), new List())
-);
+const getCoins = (transactions) => transactions.coins.keySeq();
 
-const Dashboard = ({ transaction, match }) => {
+const Dashboard = ({ transactions, match }) => {
   const {
     type,
     filter,
   } = match.params;
-  const providers = getProviders(transaction);
-  const coins = getCoins(transaction);
+  const providers = getProviders(transactions);
+  const coins = getCoins(transactions);
 
   return (
     <Flex wrap>
@@ -79,19 +71,19 @@ const Dashboard = ({ transaction, match }) => {
           {
             type === 'providers' && filter && providers.includes(filter) ? (
               <ProviderDashboard
-                transactions={transaction.get(filter)}
+                transactions={transactions}
                 provider={filter}
               />
             ) :
             type === 'coins' && filter && coins.includes(filter) ? (
               <CoinDashboard
-                transactions={transaction}
+                transactions={transactions.coins.get(filter)}
                 coin={filter}
               />
             ) :
             type === 'all' && !filter ? (
               <MainDashboard
-                transactions={transaction}
+                transactions={transactions}
                 coin={filter}
               />
             ) : (

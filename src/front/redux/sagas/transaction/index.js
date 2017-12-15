@@ -29,12 +29,9 @@ function* callPrivateAPI({ provider, operation }, ...args) {
 
 function* callFetchTransactions({ payload: { provider } }) {
   try {
-    const transactionStore = yield select((state) => state.transaction);
-    const transactionRecord = transactionStore.get(provider);
-    const {
-      fetchedAt: lastFetchedAt = 0,
-      transactions: fetchedTransactions,
-    } = transactionRecord || {};
+    const transactionsStore = yield select((state) => state.transactions);
+    const lastFetchedAt = transactionsStore.fetchedAt.get(provider);
+    const fetchedTransactions = transactionsStore.coins;
     const operations = [
       'trades',
       'withdrawals',
@@ -54,12 +51,12 @@ function* callFetchTransactions({ payload: { provider } }) {
       },
     ));
     const results = yield all(calls);
-    const mergedTransactionsMap = (new Map()).mergeDeep(...results);
+    const mergedResults = (Map()).mergeDeep(...results);
 
     yield put(transactionsFetched({
       provider,
-      transactionsMap: mergedTransactionsMap,
-      lastFetchedAt: now,
+      transactionsGroupedByCoin: mergedResults,
+      fetchedAt: now,
     }));
   } catch (ex) {
     const providerName = getProviderName(provider);
