@@ -1,6 +1,6 @@
 import { Map, OrderedMap } from 'immutable';
 import { TRANSACTIONS_FETCHED } from '../actions';
-import { Transaction } from '../records';
+import { Transaction } from '../../records';
 
 const initialState = Map({
   fetchedAt: Map(), // [provider]: fetchedTimestamp

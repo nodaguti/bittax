@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import immutableTransform from 'redux-persist-transform-immutable';
 import storage from 'redux-persist/es/storage';
-import * as records from '../records';
+import * as records from '../../records';
 import oauth from './oauth';
 import transactions from './transactions';
 import notifications from './notifications';

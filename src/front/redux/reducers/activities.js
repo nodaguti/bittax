@@ -4,7 +4,7 @@ import {
   UPDATE_ACTIVITY,
   REMOVE_ACTIVITY,
 } from '../actions';
-import { Activity } from '../records';
+import { Activity } from '../../records';
 
 const initialState = new Map();
 

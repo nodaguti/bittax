@@ -1,6 +1,6 @@
 import { Map } from 'immutable';
 import { OAUTH_TOKEN_FETCHED } from '../actions';
-import { OAuthToken } from '../records';
+import { OAuthToken } from '../../records';
 
 const initialState = new Map();
 

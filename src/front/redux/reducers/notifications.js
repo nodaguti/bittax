@@ -4,7 +4,7 @@ import {
   REMOVE_NOTIFICATION,
   REMOVE_NOTIFICATIONS,
 } from '../actions';
-import { Notification } from '../records';
+import { Notification } from '../../records';
 
 const initialState = new Map();
 

@@ -1,5 +1,5 @@
 import { EMIT_MASKED_ERROR, CLEAR_ERROR } from '../actions';
-import { ImmutableError } from '../records';
+import { ImmutableError } from '../../records';
 
 const initialState = null;
 

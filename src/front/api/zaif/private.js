@@ -4,7 +4,7 @@ import PublicAPI from './public';
 import fetch from './fetch';
 import { parseCurrencyPair } from './utils';
 import providers from '../../providers';
-import { Transaction } from '../../redux/records';
+import { Transaction } from '../../records';
 
 const providerId = providers.zaif.id;
 
