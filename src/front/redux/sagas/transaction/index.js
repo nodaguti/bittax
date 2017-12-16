@@ -9,6 +9,10 @@ import {
 import APIs from '../../../api';
 import fetchWithRequestHandling from '../utils';
 import { getProviderName } from '../../../providers';
+import {
+  getFetchedAt,
+  getLastTransactionsByProvider,
+} from '../../../selectors/transactionSelectors';
 import { intl } from '../i18n';
 import messages from './messages';
 
@@ -29,9 +33,8 @@ function* callPrivateAPI({ provider, operation }, ...args) {
 
 function* callFetchTransactions({ payload: { provider } }) {
   try {
-    const transactionsStore = yield select((state) => state.transactions);
-    const lastFetchedAt = transactionsStore.fetchedAt.get(provider);
-    const fetchedTransactions = transactionsStore.coins;
+    const lastFetchedAt = yield select(getFetchedAt, { provider });
+    const lastTransactions = yield select(getLastTransactionsByProvider, { provider });
     const operations = [
       'trades',
       'withdrawals',
@@ -47,7 +50,7 @@ function* callFetchTransactions({ payload: { provider } }) {
       null,
       {
         lastFetchedAt,
-        fetchedTransactions,
+        lastTransactions,
       },
     ));
     const results = yield all(calls);

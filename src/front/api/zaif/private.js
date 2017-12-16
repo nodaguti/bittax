@@ -5,6 +5,7 @@ import fetch from './fetch';
 import { parseCurrencyPair } from './utils';
 import providers from '../../providers';
 import { Transaction } from '../../records';
+import { tradeActions } from '../../constants';
 
 const providerId = providers.zaif.id;
 
@@ -46,7 +47,7 @@ export default class Private {
         timestamp: trade.timestamp * 1000,
         base,
         quoted,
-        action: trade.action.toLowerCase(),
+        action: tradeActions[trade.action.toUpperCase()],
         amount: trade.amount,
         price: {
           [quoted]: trade.price,
@@ -134,7 +135,7 @@ export default class Private {
         id: withdrawalId,
         timestamp: withdrawal.timestamp * 1000,
         base: currency,
-        action: 'withdraw',
+        action: tradeActions.WITHDRAW,
         amount: withdrawal.amount,
         address: withdrawal.address,
       })));
@@ -206,7 +207,7 @@ export default class Private {
         id: depositId,
         timestamp: deposit.timestamp * 1000,
         base: currency,
-        action: 'deposit',
+        action: tradeActions.DEPOSIT,
         amount: deposit.amount,
         address: deposit.address,
       })));

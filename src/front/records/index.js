@@ -39,7 +39,7 @@ export const Transaction = new Record({
   timestamp: 0, // Unix Timestamp [ms]
   base: '',
   quoted: '',
-  action: '', // bid, ask, withdraw, deposit
+  action: '', // constants.tradeActions
   amount: 0,
   price: {
     jpy: 0,
@@ -48,18 +48,20 @@ export const Transaction = new Record({
     jpy: 0,
   },
   address: '',
-  reports: {
-    provider: {
-      averageCost: 0,
-      totalAmount: 0,
-      totalCost: 0,
-      totalGain: 0,
-    },
-    coin: {
-      averageCost: 0,
-      totalAmount: 0,
-      totalCost: 0,
-      totalGain: 0,
-    },
-  },
 }, 'transaction');
+
+export const TradeStat = new Record({
+  averageCost: 0,
+  totalAmount: 0,
+  totalCost: 0,
+  totalCommission: 0,
+  totalGain: 0,
+}, 'trade-stat');
+
+export const Report = new Record({
+  strategy: '', // constants.strategies
+  reportCurrency: '',
+  total: new TradeStat(), // Only total{Cost, Commission, Gain} are to be used.
+  coins: Map(), // [coin]: Map<[transactionKey]: TradeStat>
+  providers: Map(), // [providerId]: Map<[coin]: Map<[transactionKey]: TradeStat>>
+}, 'report');
