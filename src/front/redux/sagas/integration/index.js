@@ -12,7 +12,9 @@ import messages from './messages';
 function* callFetchTokenAndTransactions({ payload: { provider } }) {
   // Wait until the expecting token has been fetched
   while (true) {
-    const { payload: { provider: _provider } } = yield take(OAUTH_TOKEN_FETCHED);
+    const { payload: { provider: _provider } } = yield take(
+      OAUTH_TOKEN_FETCHED,
+    );
 
     if (_provider === provider) {
       break;
@@ -21,10 +23,14 @@ function* callFetchTokenAndTransactions({ payload: { provider } }) {
 
   const providerName = getProviderName(provider);
 
-  yield put(appendNotification({
-    id: `${provider}-integration-completed`,
-    message: intl().formatMessage(messages.completed, { provider: providerName }),
-  }));
+  yield put(
+    appendNotification({
+      id: `${provider}-integration-completed`,
+      message: intl().formatMessage(messages.completed, {
+        provider: providerName,
+      }),
+    }),
+  );
 
   // the initial fetch
   yield put(fetchTransactions({ provider }));

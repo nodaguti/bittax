@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Heading,
-  BlockLink,
-} from 'rebass';
+import { Box, Heading, BlockLink } from 'rebass';
 
 const Section = ({ name, children }) => (
   <Box my={4}>

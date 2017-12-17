@@ -5,10 +5,7 @@ import jaLocaleData from 'react-intl/locale-data/ja';
 import enMessages from './locales/en.json';
 import jaMessages from './locales/ja.json';
 
-addLocaleData([
-  ...enLocaleData,
-  ...jaLocaleData,
-]);
+addLocaleData([...enLocaleData, ...jaLocaleData]);
 
 const messages = {
   en: enMessages,

@@ -21,7 +21,9 @@ function* callPrivateAPI({ provider, operation }, ...args) {
   const methodName = camelCase(`fetch-${operation}`);
   const providerName = getProviderName(provider);
   const activityId = `${provider}-${operation}-${Date.now()}`;
-  const activityTitle = intl().formatMessage(messages[methodName], { provider: providerName });
+  const activityTitle = intl().formatMessage(messages[methodName], {
+    provider: providerName,
+  });
 
   return yield call(
     fetchWithRequestHandling,
@@ -34,41 +36,47 @@ function* callPrivateAPI({ provider, operation }, ...args) {
 function* callFetchTransactions({ payload: { provider } }) {
   try {
     const lastFetchedAt = yield select(getFetchedAt, { provider });
-    const lastTransactions = yield select(getLastTransactionsByProvider, { provider });
-    const operations = [
-      'trades',
-      'withdrawals',
-      'deposits',
-    ];
+    const lastTransactions = yield select(getLastTransactionsByProvider, {
+      provider,
+    });
+    const operations = ['trades', 'withdrawals', 'deposits'];
     const now = Date.now();
 
-    const calls = operations.map((operation) => callPrivateAPI(
-      {
-        provider,
-        operation,
-      },
-      null,
-      {
-        lastFetchedAt,
-        lastTransactions,
-      },
-    ));
+    const calls = operations.map((operation) =>
+      callPrivateAPI(
+        {
+          provider,
+          operation,
+        },
+        null,
+        {
+          lastFetchedAt,
+          lastTransactions,
+        },
+      ),
+    );
     const results = yield all(calls);
-    const mergedResults = (Map()).mergeDeep(...results);
+    const mergedResults = Map().mergeDeep(...results);
 
-    yield put(transactionsFetched({
-      provider,
-      transactionsGroupedByCoin: mergedResults,
-      fetchedAt: now,
-    }));
+    yield put(
+      transactionsFetched({
+        provider,
+        transactionsGroupedByCoin: mergedResults,
+        fetchedAt: now,
+      }),
+    );
   } catch (ex) {
     const providerName = getProviderName(provider);
 
-    yield put(emitError({
-      name: intl().formatMessage(messages.connectionError),
-      message: intl().formatMessage(messages.connectionErrorMessage, { provider: providerName }),
-      details: ex,
-    }));
+    yield put(
+      emitError({
+        name: intl().formatMessage(messages.connectionError),
+        message: intl().formatMessage(messages.connectionErrorMessage, {
+          provider: providerName,
+        }),
+        details: ex,
+      }),
+    );
   }
 }
 

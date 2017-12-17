@@ -5,7 +5,11 @@ const limiter = new Bottleneck(5, 3100); // 6000 requests per hour
 
 const fetchAPI = async (url, { params, ...opts } = {}) => {
   const searchParams = new URLSearchParams(params);
-  const res = await limiter.schedule(fetch, `${url}?${searchParams.toString()}`, opts);
+  const res = await limiter.schedule(
+    fetch,
+    `${url}?${searchParams.toString()}`,
+    opts,
+  );
   const json = await res.json();
 
   if (json.Reponse !== 'Success') {

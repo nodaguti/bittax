@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  Manager,
-  Target,
-  Popper,
-} from 'react-popper';
-import {
-  Fixed,
-} from 'rebass';
+import { Manager, Target, Popper } from 'react-popper';
+import { Fixed } from 'rebass';
 import styled, { keyframes } from 'styled-components';
 import MdDataUsage from 'react-icons/lib/md/data-usage';
 import ActivityPanel from '../../components/ActivityPanel';
@@ -39,7 +33,7 @@ class ActivityPanelPopover extends Component {
 
   toggle = () => {
     this.setState({ opened: !this.state.opened });
-  }
+  };
 
   render() {
     const { activities } = this.props;
@@ -47,34 +41,26 @@ class ActivityPanelPopover extends Component {
     return (
       <Manager tag={false}>
         <Target onClick={this.toggle}>
-          {
-            activities.size === 0 ? (
-              <ToolbarIcon>
-                <MdDataUsage />
-              </ToolbarIcon>
-            ) : (
-              <RotatingIcon f={4}>
-                <MdDataUsage />
-              </RotatingIcon>
-            )
-          }
+          {activities.size === 0 ? (
+            <ToolbarIcon>
+              <MdDataUsage />
+            </ToolbarIcon>
+          ) : (
+            <RotatingIcon f={4}>
+              <MdDataUsage />
+            </RotatingIcon>
+          )}
         </Target>
-        {
-          !this.state.opened ? '' : (
-            <div>
-              <Fixed
-                top
-                right
-                bottom
-                left
-                onClick={this.toggle}
-              />
-              <Popper placement="bottom-end">
-                <ActivityPanel activities={activities} f={1} />
-              </Popper>
-            </div>
-          )
-        }
+        {!this.state.opened ? (
+          ''
+        ) : (
+          <div>
+            <Fixed top right bottom left onClick={this.toggle} />
+            <Popper placement="bottom-end">
+              <ActivityPanel activities={activities} f={1} />
+            </Popper>
+          </div>
+        )}
       </Manager>
     );
   }

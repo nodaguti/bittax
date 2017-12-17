@@ -27,36 +27,42 @@ export default class Private {
       throw new Error('Available token is needed.');
     }
 
-    const trades = await fetch('https://api.zaif.jp/tapi', {
-      headers: {
-        token: this.token,
+    const trades = await fetch(
+      'https://api.zaif.jp/tapi',
+      {
+        headers: {
+          token: this.token,
+        },
+        params: {
+          method: 'trade_history',
+          currency_pair: currencyPair,
+          since: lastFetchedAt,
+        },
       },
-      params: {
-        method: 'trade_history',
-        currency_pair: currencyPair,
-        since: lastFetchedAt,
-      },
-    }, true);
+      true,
+    );
 
     const { base, quoted } = parseCurrencyPair(currencyPair);
 
-    return Object.entries(trades)
-      .map(([orderId, trade]) => (new Transaction({
-        provider: providerId,
-        id: orderId,
-        timestamp: trade.timestamp * 1000,
-        base,
-        quoted,
-        action: tradeActions[trade.action.toUpperCase()],
-        amount: trade.amount,
-        price: Map({
-          [base]: 1,
-          [quoted]: trade.price,
+    return Object.entries(trades).map(
+      ([orderId, trade]) =>
+        new Transaction({
+          provider: providerId,
+          id: orderId,
+          timestamp: trade.timestamp * 1000,
+          base,
+          quoted,
+          action: tradeActions[trade.action.toUpperCase()],
+          amount: trade.amount,
+          price: Map({
+            [base]: 1,
+            [quoted]: trade.price,
+          }),
+          commission: Map({
+            [base]: trade.fee - trade.bonus,
+          }),
         }),
-        commission: Map({
-          [base]: trade.fee - trade.bonus,
-        }),
-      })));
+    );
   }
 
   fetchTrades(_, { lastFetchedAt } = {}) {
@@ -79,19 +85,24 @@ export default class Private {
 
         emitter.emit('progress', { done, total });
 
-        const promises = pairs.map((currencyPair) => this.fetchTradesOfCurrencyPair({
-          currencyPair,
-        }, {
-          lastFetchedAt,
-        }).then((data) => {
-          done += 1;
-          emitter.emit('progress', { done, total });
+        const promises = pairs.map((currencyPair) =>
+          this.fetchTradesOfCurrencyPair(
+            {
+              currencyPair,
+            },
+            {
+              lastFetchedAt,
+            },
+          ).then((data) => {
+            done += 1;
+            emitter.emit('progress', { done, total });
 
-          return data;
-        }));
+            return data;
+          }),
+        );
 
         const histories = await Promise.all(promises);
-        const results = (Map()).withMutations((mutableMap) => {
+        const results = Map().withMutations((mutableMap) => {
           histories.forEach((history, idx) => {
             if (!history.length) return;
 
@@ -119,33 +130,39 @@ export default class Private {
       throw new Error('Available token is needed.');
     }
 
-    const withdrawals = await fetch('https://api.zaif.jp/tapi', {
-      headers: {
-        token: this.token,
+    const withdrawals = await fetch(
+      'https://api.zaif.jp/tapi',
+      {
+        headers: {
+          token: this.token,
+        },
+        params: {
+          method: 'withdraw_history',
+          currency,
+          since: lastFetchedAt,
+        },
       },
-      params: {
-        method: 'withdraw_history',
-        currency,
-        since: lastFetchedAt,
-      },
-    }, true);
+      true,
+    );
 
-    return Object.entries(withdrawals)
-      .map(([withdrawalId, withdrawal]) => (new Transaction({
-        provider: providerId,
-        id: withdrawalId,
-        timestamp: withdrawal.timestamp * 1000,
-        base: currency,
-        action: tradeActions.WITHDRAW,
-        amount: withdrawal.amount,
-        price: Map({
-          [currency]: 1,
+    return Object.entries(withdrawals).map(
+      ([withdrawalId, withdrawal]) =>
+        new Transaction({
+          provider: providerId,
+          id: withdrawalId,
+          timestamp: withdrawal.timestamp * 1000,
+          base: currency,
+          action: tradeActions.WITHDRAW,
+          amount: withdrawal.amount,
+          price: Map({
+            [currency]: 1,
+          }),
+          commission: Map({
+            [currency]: 0,
+          }),
+          address: withdrawal.address,
         }),
-        commission: Map({
-          [currency]: 0,
-        }),
-        address: withdrawal.address,
-      })));
+    );
   }
 
   fetchWithdrawals(_, { lastFetchedAt } = {}) {
@@ -163,19 +180,24 @@ export default class Private {
 
         emitter.emit('progress', { done, total });
 
-        const promises = currencies.map((currency) => this.fetchWithdrawalsOfCurrency({
-          currency,
-        }, {
-          lastFetchedAt,
-        }).then((data) => {
-          done += 1;
-          emitter.emit('progress', { done, total });
+        const promises = currencies.map((currency) =>
+          this.fetchWithdrawalsOfCurrency(
+            {
+              currency,
+            },
+            {
+              lastFetchedAt,
+            },
+          ).then((data) => {
+            done += 1;
+            emitter.emit('progress', { done, total });
 
-          return data;
-        }));
+            return data;
+          }),
+        );
 
         const histories = await Promise.all(promises);
-        const results = (Map()).withMutations((mutableMap) => {
+        const results = Map().withMutations((mutableMap) => {
           histories.forEach((history, idx) => {
             if (!history.length) return;
 
@@ -197,33 +219,39 @@ export default class Private {
       throw new Error('Available token is needed.');
     }
 
-    const deposits = await fetch('https://api.zaif.jp/tapi', {
-      headers: {
-        token: this.token,
+    const deposits = await fetch(
+      'https://api.zaif.jp/tapi',
+      {
+        headers: {
+          token: this.token,
+        },
+        params: {
+          method: 'deposit_history',
+          currency,
+          since: lastFetchedAt,
+        },
       },
-      params: {
-        method: 'deposit_history',
-        currency,
-        since: lastFetchedAt,
-      },
-    }, true);
+      true,
+    );
 
-    return Object.entries(deposits)
-      .map(([depositId, deposit]) => (new Transaction({
-        provider: providerId,
-        id: depositId,
-        timestamp: deposit.timestamp * 1000,
-        base: currency,
-        action: tradeActions.DEPOSIT,
-        amount: deposit.amount,
-        price: Map({
-          [currency]: 1,
+    return Object.entries(deposits).map(
+      ([depositId, deposit]) =>
+        new Transaction({
+          provider: providerId,
+          id: depositId,
+          timestamp: deposit.timestamp * 1000,
+          base: currency,
+          action: tradeActions.DEPOSIT,
+          amount: deposit.amount,
+          price: Map({
+            [currency]: 1,
+          }),
+          commission: Map({
+            [currency]: 0,
+          }),
+          address: deposit.address,
         }),
-        commission: Map({
-          [currency]: 0,
-        }),
-        address: deposit.address,
-      })));
+    );
   }
 
   fetchDeposits(_, { lastFetchedAt } = {}) {
@@ -241,19 +269,24 @@ export default class Private {
 
         emitter.emit('progress', { done, total });
 
-        const promises = currencies.map((currency) => this.fetchDepositsOfCurrency({
-          currency,
-        }, {
-          lastFetchedAt,
-        }).then((data) => {
-          done += 1;
-          emitter.emit('progress', { done, total });
+        const promises = currencies.map((currency) =>
+          this.fetchDepositsOfCurrency(
+            {
+              currency,
+            },
+            {
+              lastFetchedAt,
+            },
+          ).then((data) => {
+            done += 1;
+            emitter.emit('progress', { done, total });
 
-          return data;
-        }));
+            return data;
+          }),
+        );
 
         const histories = await Promise.all(promises);
-        const results = (Map()).withMutations((mutableMap) => {
+        const results = Map().withMutations((mutableMap) => {
           histories.forEach((history, idx) => {
             if (!history.length) return;
 

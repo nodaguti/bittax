@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 class SourceImporter extends Component {
   render() {
-    return (<div>{this.props.provider}</div>);
+    return <div>{this.props.provider}</div>;
   }
 }
 

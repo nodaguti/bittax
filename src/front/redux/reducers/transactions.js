@@ -11,11 +11,10 @@ const initialState = Map({
 });
 
 const reducers = {
-  [TRANSACTIONS_FETCHED](state, {
-    provider,
-    fetchedAt,
-    transactionsGroupedByCoin,
-  }) {
+  [TRANSACTIONS_FETCHED](
+    state,
+    { provider, fetchedAt, transactionsGroupedByCoin },
+  ) {
     return state.withMutations((mutableState) => {
       mutableState.setIn(['fetchedAt', provider], fetchedAt);
 
@@ -24,40 +23,40 @@ const reducers = {
           mutableState.setIn(['coins', coin], OrderedMap());
         }
 
-        mutableState.updateIn(
-          ['coins', coin],
-          (transactions) => {
-            const appended = transactions.withMutations((mutableMap) => {
-              transactionsToAppend.forEach((item) => {
-                const transaction = new Transaction(item);
-                const { id, timestamp, action } = transaction;
-                const key = `${provider}-${id}-${timestamp}-${action}`;
+        mutableState.updateIn(['coins', coin], (transactions) => {
+          const appended = transactions.withMutations((mutableMap) => {
+            transactionsToAppend.forEach((item) => {
+              const transaction = new Transaction(item);
+              const { id, timestamp, action } = transaction;
+              const key = `${provider}-${id}-${timestamp}-${action}`;
 
-                mutableMap.set(key, transaction);
-              });
+              mutableMap.set(key, transaction);
             });
+          });
 
-            return appended.sort((a, b) => {
-              const timeDiff = a.timestamp - b.timestamp;
-              if (timeDiff !== 0) return timeDiff;
+          return appended.sort((a, b) => {
+            const timeDiff = a.timestamp - b.timestamp;
+            if (timeDiff !== 0) return timeDiff;
 
-              if (a.provider === b.provider) {
-                const aId = Number(a.id);
-                const bId = Number(b.id);
-                const idDiff = aId - bId;
+            if (a.provider === b.provider) {
+              const aId = Number(a.id);
+              const bId = Number(b.id);
+              const idDiff = aId - bId;
 
-                if (idDiff !== 0) return idDiff;
-              }
+              if (idDiff !== 0) return idDiff;
+            }
 
-              return 0;
-            });
-          },
-        );
+            return 0;
+          });
+        });
       });
     });
   },
 
-  [FETCHED_PRICES_IN_REPORT_CURRENCY](state, { pricesGroupedByCoin, currency }) {
+  [FETCHED_PRICES_IN_REPORT_CURRENCY](
+    state,
+    { pricesGroupedByCoin, currency },
+  ) {
     return state.withMutations((mutableState) => {
       Object.entries(pricesGroupedByCoin).forEach(([coin, prices]) =>
         Object.entries(prices).forEach(([transactionKey, price]) => {
@@ -71,17 +70,19 @@ const reducers = {
 
           mutableState.updateIn(
             ['coins', coin, transactionKey, 'commission'],
-            (commission) => commission.set(
-              currency,
-              commission.get(base) * price,
-            ),
+            (commission) =>
+              commission.set(currency, commission.get(base) * price),
           );
-        }));
+        }),
+      );
     });
   },
 };
 
-export default function transactionsReducer(state = initialState, { type, payload }) {
+export default function transactionsReducer(
+  state = initialState,
+  { type, payload },
+) {
   const reducer = reducers[type];
-  return (reducer) ? reducer(state, payload) : state;
+  return reducer ? reducer(state, payload) : state;
 }

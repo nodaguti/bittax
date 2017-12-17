@@ -7,7 +7,9 @@ const Icon = styled(Text)`
 `;
 
 const ToolbarIcon = ({ children, ...props }) => (
-  <Icon f={4} {...props}>{children}</Icon>
+  <Icon f={4} {...props}>
+    {children}
+  </Icon>
 );
 
 export default ToolbarIcon;

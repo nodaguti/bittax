@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import {
-  Panel,
-  PanelHead,
-  Flex,
-  Box,
-  Subhead,
-} from 'rebass';
+import { Panel, PanelHead, Flex, Box, Subhead } from 'rebass';
 
 const TotalGainTable = () => {
   return (

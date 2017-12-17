@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  Panel,
-  Box,
-  Text,
-} from 'rebass';
+import { Panel, Box, Text } from 'rebass';
 import { intlShape } from 'react-intl';
 import messages from './messages';
 import FormattedText from '../../components/FormattedText';
-import {
-  oAuthPopupRedirected,
-  emitError,
-} from '../../redux/actions';
+import { oAuthPopupRedirected, emitError } from '../../redux/actions';
 import { getProviderName } from '../../providers';
 
 class OAuthRedirectHandler extends Component {
@@ -33,11 +26,15 @@ class OAuthRedirectHandler extends Component {
 
       dispatch(oAuthPopupRedirected({ code, state, provider }));
     } catch (ex) {
-      dispatch(emitError({
-        name: formatMessage(messages.authenticationError),
-        message: formatMessage(messages.authenticationErrorMessage, { provider: providerName }),
-        details: ex,
-      }));
+      dispatch(
+        emitError({
+          name: formatMessage(messages.authenticationError),
+          message: formatMessage(messages.authenticationErrorMessage, {
+            provider: providerName,
+          }),
+          details: ex,
+        }),
+      );
     }
   }
 

@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Flex,
-  Lead,
-  Text,
-} from 'rebass';
+import { Flex, Lead, Text } from 'rebass';
 import MdSecurity from 'react-icons/lib/md/security';
 import MdTimelapse from 'react-icons/lib/md/timelapse';
 import MdSmartphone from 'react-icons/lib/md/smartphone';

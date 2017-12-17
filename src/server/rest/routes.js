@@ -25,7 +25,7 @@ const router = new Router();
 registerAPI(router);
 router.get('/(.*)', serveHome);
 
-export default function (app) {
+export default function(app) {
   app.use(router.routes());
   app.use(router.allowedMethods());
 }

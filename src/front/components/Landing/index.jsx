@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Container,
-} from 'rebass';
+import { Box, Container } from 'rebass';
 import Header from './Header';
 import About from './About';
 import Feature from './Feature';

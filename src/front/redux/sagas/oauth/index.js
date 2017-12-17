@@ -49,15 +49,15 @@ function* fetchCode({ provider }) {
 
 function* fetchToken({ provider, code, state }) {
   const api = APIs[provider].oAuth;
-  const {
-    state: stateReturned,
-    token,
-    refreshToken,
-    expire,
-  } = yield call(api.fetchToken, { code });
+  const { state: stateReturned, token, refreshToken, expire } = yield call(
+    api.fetchToken,
+    { code },
+  );
 
   if (stateReturned !== state) {
-    throw new Error(`state mismatched, possibly compromised!: ${state}, ${stateReturned}`);
+    throw new Error(
+      `state mismatched, possibly compromised!: ${state}, ${stateReturned}`,
+    );
   }
 
   return { token, refreshToken, expire };
@@ -66,24 +66,28 @@ function* fetchToken({ provider, code, state }) {
 function* callAuthenticate({ payload: { provider } }) {
   try {
     const { state, code } = yield call(fetchCode, { provider });
-    const {
-      token,
-      refreshToken,
-      expire,
-    } = yield call(fetchToken, { provider, code, state });
-
-    yield put(oAuthTokenFetched({
+    const { token, refreshToken, expire } = yield call(fetchToken, {
       provider,
-      token,
-      refreshToken,
-      expire,
-    }));
+      code,
+      state,
+    });
+
+    yield put(
+      oAuthTokenFetched({
+        provider,
+        token,
+        refreshToken,
+        expire,
+      }),
+    );
   } catch (ex) {
-    yield put(emitError({
-      name: intl().formatMessage(messages.authenticationError),
-      message: intl().formatMessage(messages.authenticationErrorMessage),
-      details: ex,
-    }));
+    yield put(
+      emitError({
+        name: intl().formatMessage(messages.authenticationError),
+        message: intl().formatMessage(messages.authenticationErrorMessage),
+        details: ex,
+      }),
+    );
   }
 }
 
@@ -95,26 +99,31 @@ function* callUpdateToken({ payload: { provider, refreshToken } }) {
   const api = APIs[provider].oAuth;
 
   try {
-    const {
-      token,
-      refreshToken: newRefreshToken,
-      expire,
-    } = yield call(api.refreshToken, { refreshToken });
+    const { token, refreshToken: newRefreshToken, expire } = yield call(
+      api.refreshToken,
+      { refreshToken },
+    );
 
-    yield put(oAuthTokenFetched({
-      provider,
-      token,
-      refreshToken: newRefreshToken,
-      expire,
-    }));
+    yield put(
+      oAuthTokenFetched({
+        provider,
+        token,
+        refreshToken: newRefreshToken,
+        expire,
+      }),
+    );
   } catch (ex) {
     const providerName = getProviderName(provider);
 
-    yield put(emitError({
-      name: intl().formatMessage(messages.connectionError),
-      message: intl().formatMessage(messages.connectionErrorMessage, { provider: providerName }),
-      details: ex,
-    }));
+    yield put(
+      emitError({
+        name: intl().formatMessage(messages.connectionError),
+        message: intl().formatMessage(messages.connectionErrorMessage, {
+          provider: providerName,
+        }),
+        details: ex,
+      }),
+    );
   }
 }
 
@@ -143,14 +152,18 @@ function waitForAckReceived({ provider, expectedOrigin }) {
 
 function* handleRedirectInPopup() {
   while (true) {
-    const { payload: { provider, code, state } } = yield take(OAUTH_POPUP_REDIRECTED);
+    const { payload: { provider, code, state } } = yield take(
+      OAUTH_POPUP_REDIRECTED,
+    );
     const mainWin = window.opener;
 
     if (!mainWin) {
-      yield put(emitError({
-        name: intl().formatMessage(messages.authenticationError),
-        message: intl().formatMessage(messages.targetWindowClosed),
-      }));
+      yield put(
+        emitError({
+          name: intl().formatMessage(messages.authenticationError),
+          message: intl().formatMessage(messages.targetWindowClosed),
+        }),
+      );
       continue;
     }
 

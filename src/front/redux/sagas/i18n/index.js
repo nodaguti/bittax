@@ -1,9 +1,6 @@
 import { take, fork, select } from 'redux-saga/effects';
 import { IntlProvider } from 'react-intl';
-import {
-  REHYDRATION_COMPLETED,
-  SET_LOCALE,
-} from '../../actions';
+import { REHYDRATION_COMPLETED, SET_LOCALE } from '../../actions';
 import messages from '../../../i18n';
 
 class IntlProviderManager {

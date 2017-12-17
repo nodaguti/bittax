@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Toolbar,
-  Text,
-  NavLink,
-  Link,
-} from 'rebass';
+import { Box, Toolbar, Text, NavLink, Link } from 'rebass';
 import { Link as RouterLink } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import FormattedText from '../FormattedText';
@@ -15,25 +9,13 @@ import LocaleSelector from '../../containers/LocaleSelector';
 const Footer = () => (
   <Box f={1}>
     <Toolbar>
-      <NavLink
-        is={RouterLink}
-        to="/landing"
-        href="/landing"
-      >
+      <NavLink is={RouterLink} to="/landing" href="/landing">
         About
       </NavLink>
-      <NavLink
-        is={RouterLink}
-        to="/terms"
-        href="/terms"
-      >
+      <NavLink is={RouterLink} to="/terms" href="/terms">
         Terms
       </NavLink>
-      <NavLink
-        is={RouterLink}
-        to="/privacy"
-        href="/privacy"
-      >
+      <NavLink is={RouterLink} to="/privacy" href="/privacy">
         Privacy
       </NavLink>
       <Box ml="auto" f={2} color="black" bg="white">
@@ -59,7 +41,9 @@ const Footer = () => (
             }}
           />
         </Text>
-        <Text mt={3}><FormattedText {...messages.disclaimer} /></Text>
+        <Text mt={3}>
+          <FormattedText {...messages.disclaimer} />
+        </Text>
         <Text mt={3}>Bittax &copy; 2017 nodaguti.</Text>
       </Box>
     </Toolbar>

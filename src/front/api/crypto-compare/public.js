@@ -29,15 +29,12 @@ class Cache {
 const cache = new Cache();
 
 export default class Public {
-  static async fetchPriceAt({
-    base,
-    quoted,
-    provider,
-    timestamp,
-  }) {
+  static async fetchPriceAt({ base, quoted, provider, timestamp }) {
     // As CryptoCompare only provides historical price data as hourly,
     // we use the close price of a timeframe which the given timestamp is in.
-    const hourlyFlooredUnixTimestamp = moment(timestamp).floor(1, 'hours').unix();
+    const hourlyFlooredUnixTimestamp = moment(timestamp)
+      .floor(1, 'hours')
+      .unix();
     const cacheQuery = { base, quoted, timestamp: hourlyFlooredUnixTimestamp };
 
     if (cache.has(cacheQuery)) {
@@ -46,22 +43,26 @@ export default class Public {
       return Promise.resolve(price);
     }
 
-    const data = await fetch('https://min-api.cryptocompare.com/data/histohour', {
-      params: {
-        fsym: base.toUpperCase(base),
-        tsym: quoted.toUpperCase(quoted),
-        limit: 24,
-        toTs: hourlyFlooredUnixTimestamp,
-        e: provider,
+    const data = await fetch(
+      'https://min-api.cryptocompare.com/data/histohour',
+      {
+        params: {
+          fsym: base.toUpperCase(base),
+          tsym: quoted.toUpperCase(quoted),
+          limit: 24,
+          toTs: hourlyFlooredUnixTimestamp,
+          e: provider,
+        },
       },
-    });
+    );
 
     const pricesAtTheTime = last(data);
 
     if (pricesAtTheTime.time !== hourlyFlooredUnixTimestamp) {
       const humanReadableTimestamp = moment(timestamp).format();
-      const humanReadableHourlyFlooredUnixTimestamp =
-        moment().unix(hourlyFlooredUnixTimestamp).format();
+      const humanReadableHourlyFlooredUnixTimestamp = moment()
+        .unix(hourlyFlooredUnixTimestamp)
+        .format();
       const args = {
         base,
         quoted,

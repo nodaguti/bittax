@@ -4,9 +4,7 @@ import { ImmutableError } from '../../records';
 const initialState = null;
 
 const reducers = {
-  [EMIT_MASKED_ERROR](state, {
-    name, message, details,
-  }) {
+  [EMIT_MASKED_ERROR](state, { name, message, details }) {
     if (process.env.NODE_ENV === 'development') {
       console.error(details);
     }
@@ -29,5 +27,5 @@ const reducers = {
 
 export default function error(state = initialState, { type, payload }) {
   const reducer = reducers[type];
-  return (reducer) ? reducer(state, payload) : state;
+  return reducer ? reducer(state, payload) : state;
 }

@@ -1,8 +1,6 @@
 import request from 'request';
 
-const originWhitelist = [
-  'http://localhost:8080',
-];
+const originWhitelist = ['http://localhost:8080'];
 
 const api = {
   async proxy(ctx) {
@@ -22,7 +20,7 @@ const api = {
   },
 };
 
-export default function (router) {
+export default function(router) {
   router.get('/api/proxy', api.proxy);
   router.post('/api/proxy', api.proxy);
 }

@@ -36,7 +36,7 @@ export default class OAuth {
       state: data.state,
       token: data.access_token,
       refreshToken: data.refresh_token,
-      expire: Date.now() + (Number(data.expires_in) * 1000),
+      expire: Date.now() + Number(data.expires_in) * 1000,
     };
   }
 
@@ -53,7 +53,7 @@ export default class OAuth {
     return {
       token: data.access_token,
       refreshToken: data.refresh_token,
-      expire: Date.now() + (Number(data.expires_in) * 1000),
+      expire: Date.now() + Number(data.expires_in) * 1000,
     };
   }
 }

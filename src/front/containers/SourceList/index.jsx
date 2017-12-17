@@ -1,18 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  Container,
-  Flex,
-  Box,
-  Panel,
-  PanelHeader,
-} from 'rebass';
+import { Container, Flex, Box, Panel, PanelHeader } from 'rebass';
 import messages from './messages';
 import FormattedText from '../../components/FormattedText';
-import {
-  BlockButton,
-  BlockButtonOutline,
-} from '../../components/BlockButton';
+import { BlockButton, BlockButtonOutline } from '../../components/BlockButton';
 import { requestOAuthIntegration } from '../../redux/actions';
 import providers from '../../providers';
 
@@ -22,10 +13,7 @@ const mapStateToProps = (state) => ({
 
 class SourceList extends Component {
   renderOAuthButton(id) {
-    const {
-      oauth,
-      dispatch,
-    } = this.props;
+    const { oauth, dispatch } = this.props;
     const isConnected = oauth.has(id);
 
     return isConnected ? (
@@ -43,9 +31,7 @@ class SourceList extends Component {
   }
 
   renderAPIButton(id) {
-    const {
-      history,
-    } = this.props;
+    const { history } = this.props;
 
     return (
       <BlockButtonOutline
@@ -58,9 +44,7 @@ class SourceList extends Component {
   }
 
   renderCSVButton(id) {
-    const {
-      history,
-    } = this.props;
+    const { history } = this.props;
 
     return (
       <BlockButtonOutline
@@ -76,30 +60,15 @@ class SourceList extends Component {
     const { id, name } = provider;
 
     return (
-      <Box
-        key={id}
-        px={2}
-        py={2}
-        w={[
-          1,
-          1 / 2,
-          1 / 3,
-        ]}
-      >
+      <Box key={id} px={2} py={2} w={[1, 1 / 2, 1 / 3]}>
         <Panel color="blue">
           <PanelHeader color="white" bg="blue">
             {name}
           </PanelHeader>
           <Box p={2}>
-            {
-              !provider.oauth ? '' : this.renderOAuthButton(id)
-            }
-            {
-              !provider.api ? '' : this.renderAPIButton(id)
-            }
-            {
-              !provider.csv ? '' : this.renderCSVButton(id)
-            }
+            {!provider.oauth ? '' : this.renderOAuthButton(id)}
+            {!provider.api ? '' : this.renderAPIButton(id)}
+            {!provider.csv ? '' : this.renderCSVButton(id)}
           </Box>
         </Panel>
       </Box>
@@ -110,12 +79,10 @@ class SourceList extends Component {
     return (
       <Container py={3}>
         <Flex wrap>
-          {
-            providers
-              .map((provider) => this.renderPanel(provider))
-              .valueSeq()
-              .toArray()
-          }
+          {providers
+            .map((provider) => this.renderPanel(provider))
+            .valueSeq()
+            .toArray()}
         </Flex>
       </Container>
     );

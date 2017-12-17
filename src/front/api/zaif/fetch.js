@@ -33,7 +33,12 @@ const enqueueFetch = (url, { params, ...opts } = {}, isPrivate = false) => {
 };
 
 const fetchAPI = async (url, { params, ...opts } = {}, isPrivate = false) => {
-  const req = enqueueLimiter.schedule(enqueueFetch, url, { params, ...opts }, isPrivate);
+  const req = enqueueLimiter.schedule(
+    enqueueFetch,
+    url,
+    { params, ...opts },
+    isPrivate,
+  );
   const res = await req;
   const resForErrorHandling = res.clone();
 
@@ -52,7 +57,12 @@ const fetchAPI = async (url, { params, ...opts } = {}, isPrivate = false) => {
       const message = json.return || res.headers.get('x-message');
 
       if (retryableMessages.includes(message)) {
-        console.warn(`Retry: "${message}" from ${url} (params: ${JSON.stringify({ params, ...opts })})`);
+        console.warn(
+          `Retry: "${message}" from ${url} (params: ${JSON.stringify({
+            params,
+            ...opts,
+          })})`,
+        );
         return fetchAPI(url, { params, ...opts }, isPrivate);
       }
 
@@ -64,11 +74,21 @@ const fetchAPI = async (url, { params, ...opts } = {}, isPrivate = false) => {
     const text = await resForErrorHandling.text();
 
     if (text.includes('Bad Gateway')) {
-      console.warn(`Retry: Got the following from ${url} (params: ${JSON.stringify({ params, ...opts })}):\n\n${text}`);
+      console.warn(
+        `Retry: Got the following from ${url} (params: ${JSON.stringify({
+          params,
+          ...opts,
+        })}):\n\n${text}`,
+      );
       return fetchAPI(url, { params, ...opts }, isPrivate);
     }
 
-    console.error(`Got the following from ${url} (params: ${JSON.stringify({ params, ...opts })}):\n\n${text}`);
+    console.error(
+      `Got the following from ${url} (params: ${JSON.stringify({
+        params,
+        ...opts,
+      })}):\n\n${text}`,
+    );
     throw ex;
   }
 };

@@ -31,5 +31,5 @@ const reducers = {
 
 export default function reportReducer(state = initialState, { type, payload }) {
   const reducer = reducers[type];
-  return (reducer) ? reducer(state, payload) : state;
+  return reducer ? reducer(state, payload) : state;
 }

@@ -1,18 +1,20 @@
 import { put, take, call } from 'redux-saga/effects';
 import { eventChannel, END } from 'redux-saga';
-import {
-  appendActivity,
-  updateActivity,
-  removeActivity,
-} from '../actions';
+import { appendActivity, updateActivity, removeActivity } from '../actions';
 
 function createProgressChannel([context, func], ...args) {
   return eventChannel((emit) => {
     const emitter = context[func].call(context, ...args);
 
     emitter.on('progress', ({ done, total }) => emit({ done, total }));
-    emitter.on('error', (err) => { emit({ err }); emit(END); });
-    emitter.on('end', (data) => { emit({ data }); emit(END); });
+    emitter.on('error', (err) => {
+      emit({ err });
+      emit(END);
+    });
+    emitter.on('end', (data) => {
+      emit({ data });
+      emit(END);
+    });
 
     // unfortunately there is no way aborting fetch requests right now.
     const unsubscribe = () => ({});
@@ -20,15 +22,22 @@ function createProgressChannel([context, func], ...args) {
   });
 }
 
-export function* fetchWithRequestHandling({ id, title }, contextAndFunc, ...args) {
+export function* fetchWithRequestHandling(
+  { id, title },
+  contextAndFunc,
+  ...args
+) {
   yield put(appendActivity({ id, title }));
 
-  const [
-    context,
-    func,
-  ] = Array.isArray(contextAndFunc) ? contextAndFunc : [null, contextAndFunc];
+  const [context, func] = Array.isArray(contextAndFunc)
+    ? contextAndFunc
+    : [null, contextAndFunc];
 
-  const progressChannel = yield call(createProgressChannel, [context, func], ...args);
+  const progressChannel = yield call(
+    createProgressChannel,
+    [context, func],
+    ...args,
+  );
 
   try {
     while (true) {
@@ -55,7 +64,9 @@ export async function all(keyToPromiseMap) {
   const results = await Promise.all(promises);
   const resultsObj = {};
 
-  results.forEach((result, i) => { resultsObj[keys[i]] = result; });
+  results.forEach((result, i) => {
+    resultsObj[keys[i]] = result;
+  });
 
   return resultsObj;
 }

@@ -6,12 +6,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import styled from 'styled-components';
-import {
-  Provider as ThemeProvider,
-  Container,
-  Flex,
-  Box,
-} from 'rebass';
+import { Provider as ThemeProvider, Container, Flex, Box } from 'rebass';
 import LocaleProvider from '../../containers/LocaleProvider';
 import Navbar from '../Navbar';
 import RouteChangedHandler from '../../containers/RouteChangedHandler';
@@ -28,7 +23,8 @@ import Footer from '../Footer';
 
 const theme = {
   // https://qiita.com/RinoTsuka/items/4181efd43d072e246519
-  font: '-apple-system, BlinkMacSystemFont, "Helvetica Neue", "Original Yu Gothic", "Yu Gothic", YuGothic, Verdana, Meiryo, "M+ 1p", sans-serif',
+  font:
+    '-apple-system, BlinkMacSystemFont, "Helvetica Neue", "Original Yu Gothic", "Yu Gothic", YuGothic, Verdana, Meiryo, "M+ 1p", sans-serif',
 };
 
 const FlexFullscreened = styled(Flex)`
@@ -46,18 +42,8 @@ const App = () => (
           </Box>
           <Box flex="1 0 auto">
             <Switch>
-              <Route
-                path="/"
-                exact
-                strict
-                component={Home}
-              />
-              <Route
-                path="/landing"
-                exact
-                strict
-                component={Landing}
-              />
+              <Route path="/" exact strict component={Home} />
+              <Route path="/landing" exact strict component={Landing} />
               <Route>
                 <Box>
                   <Container>

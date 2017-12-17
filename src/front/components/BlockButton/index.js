@@ -1,8 +1,5 @@
 import styled from 'styled-components';
-import {
-  Button,
-  ButtonOutline,
-} from 'rebass';
+import { Button, ButtonOutline } from 'rebass';
 
 export const BlockButton = styled(Button)`
   display: block;

@@ -9,12 +9,20 @@ import { Notification } from '../../records';
 const initialState = new Map();
 
 const reducers = {
-  [APPEND_NOTIFICATION](state, {
-    id, type = 'info', message, removable = true, ephemeral = true,
-  }) {
-    return state.set(id, new Notification({
-      id, type, message, removable, ephemeral,
-    }));
+  [APPEND_NOTIFICATION](
+    state,
+    { id, type = 'info', message, removable = true, ephemeral = true },
+  ) {
+    return state.set(
+      id,
+      new Notification({
+        id,
+        type,
+        message,
+        removable,
+        ephemeral,
+      }),
+    );
   },
 
   [REMOVE_NOTIFICATION](state, id) {
@@ -28,5 +36,5 @@ const reducers = {
 
 export default function notifications(state = initialState, { type, payload }) {
   const reducer = reducers[type];
-  return (reducer) ? reducer(state, payload) : state;
+  return reducer ? reducer(state, payload) : state;
 }

@@ -18,12 +18,15 @@ const persistConfig = {
   blacklist: ['error', 'notifications', 'activities'],
 };
 
-export default persistReducer(persistConfig, combineReducers({
-  oauth,
-  transactions,
-  report,
-  notifications,
-  activities,
-  locale,
-  error,
-}));
+export default persistReducer(
+  persistConfig,
+  combineReducers({
+    oauth,
+    transactions,
+    report,
+    notifications,
+    activities,
+    locale,
+    error,
+  }),
+);

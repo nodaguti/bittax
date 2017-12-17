@@ -5,25 +5,20 @@ import { OAuthToken } from '../../records';
 const initialState = new Map();
 
 const reducers = {
-  [OAUTH_TOKEN_FETCHED](
-    state,
-    {
+  [OAUTH_TOKEN_FETCHED](state, { provider, token, refreshToken, expire }) {
+    return state.set(
       provider,
-      token,
-      refreshToken,
-      expire,
-    },
-  ) {
-    return state.set(provider, new OAuthToken({
-      provider,
-      token,
-      refreshToken,
-      expire,
-    }));
+      new OAuthToken({
+        provider,
+        token,
+        refreshToken,
+        expire,
+      }),
+    );
   },
 };
 
 export default function oauth(state = initialState, { type, payload }) {
   const reducer = reducers[type];
-  return (reducer) ? reducer(state, payload) : state;
+  return reducer ? reducer(state, payload) : state;
 }

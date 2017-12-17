@@ -1,14 +1,7 @@
 import React from 'react';
-import {
-  Link as RouterLink,
-  withRouter,
-} from 'react-router-dom';
+import { Link as RouterLink, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import {
-  Box,
-  Toolbar,
-  NavLink,
-} from 'rebass';
+import { Box, Toolbar, NavLink } from 'rebass';
 import Hide from 'hidden-styled';
 import FaPlus from 'react-icons/lib/fa/plus';
 import MdDashboard from 'react-icons/lib/md/dashboard';
@@ -21,11 +14,7 @@ import ToolbarIcon from '../ToolbarIcon';
 import ActivityPanelPopover from '../../containers/ActivityPanelPopover';
 
 const Link = styled(({ children, ...props }) => (
-  <NavLink
-    is={RouterLink}
-    to={props.href}
-    {...props}
-  >
+  <NavLink is={RouterLink} to={props.href} {...props}>
     {children}
   </NavLink>
 ))([], (props) => {
@@ -58,21 +47,13 @@ const LinkItem = ({ children, ...props }) => (
   </Box>
 );
 
-const Navbar = (
-  { location: { pathname } },
-  { intl: { formatMessage } },
-) => {
+const Navbar = ({ location: { pathname } }, { intl: { formatMessage } }) => {
   const addExchangeText = formatMessage(messages.addExchange);
 
   return (
     <Box>
       <Toolbar>
-        <NavLink
-          is={RouterLink}
-          to="/"
-          href="/"
-          f={4}
-        >
+        <NavLink is={RouterLink} to="/" href="/" f={4}>
           Bittax
         </NavLink>
         <Link
@@ -82,21 +63,21 @@ const Navbar = (
         >
           <LinkItem>
             <Hide sm md lg>
-              <ToolbarIcon><MdDashboard color="white" /></ToolbarIcon>
+              <ToolbarIcon>
+                <MdDashboard color="white" />
+              </ToolbarIcon>
             </Hide>
             <Hide xs>
               <FormattedText {...messages.dashboard} />
             </Hide>
           </LinkItem>
         </Link>
-        <Link
-          is={RouterLink}
-          href="/sources"
-          active={pathname === '/sources'}
-        >
+        <Link is={RouterLink} href="/sources" active={pathname === '/sources'}>
           <LinkItem>
             <Hide sm md lg>
-              <ToolbarIcon><MdAttachMoney color="white" /></ToolbarIcon>
+              <ToolbarIcon>
+                <MdAttachMoney color="white" />
+              </ToolbarIcon>
             </Hide>
             <Hide xs>
               <FormattedText {...messages.exchanges} />
@@ -104,16 +85,11 @@ const Navbar = (
           </LinkItem>
         </Link>
 
-        <BottomTooltip
-          text={addExchangeText}
-          ml="auto"
-        >
-          <NavLink
-            is={RouterLink}
-            to="/sources"
-            href="/sources"
-          >
-            <ToolbarIcon><FaPlus color="white" /></ToolbarIcon>
+        <BottomTooltip text={addExchangeText} ml="auto">
+          <NavLink is={RouterLink} to="/sources" href="/sources">
+            <ToolbarIcon>
+              <FaPlus color="white" />
+            </ToolbarIcon>
           </NavLink>
         </BottomTooltip>
         <NavLink>
@@ -121,7 +97,7 @@ const Navbar = (
         </NavLink>
       </Toolbar>
     </Box>
-  )
+  );
 };
 
 // Allow Navbar to reference `context`.

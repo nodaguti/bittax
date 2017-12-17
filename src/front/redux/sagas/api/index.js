@@ -22,7 +22,9 @@ function* oAuthTokenFetched() {
 
 function* keepTokenFresh() {
   while (true) {
-    const { payload: { provider, refreshToken, expire } } = yield take(OAUTH_TOKEN_FETCHED);
+    const { payload: { provider, refreshToken, expire } } = yield take(
+      OAUTH_TOKEN_FETCHED,
+    );
 
     if (expire === 0) {
       continue;

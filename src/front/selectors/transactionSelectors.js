@@ -2,10 +2,7 @@ import { createSelector } from 'reselect';
 import createCachedSelector from 're-reselect';
 import { Map } from 'immutable';
 import { TradeStat } from '../records';
-import {
-  tradeActions,
-  strategies,
-} from '../constants';
+import { tradeActions, strategies } from '../constants';
 
 export const getCoins = createSelector(
   (state) => state.transactions.coins,
@@ -26,17 +23,19 @@ export const getTransactionsByCoin = (state, props) =>
 export const getTransactionsByProvider = createCachedSelector(
   (state) => state.transactions.coins,
   (_, props) => props.provider,
-  (transactionsGroupedByCoin, provider) => (
+  (transactionsGroupedByCoin, provider) =>
     transactionsGroupedByCoin.map((transactions) =>
-      transactions.filter((transaction) => transaction.provider === provider))
-  ),
+      transactions.filter((transaction) => transaction.provider === provider),
+    ),
 )((_, provider) => provider);
 
 export const getLastTransactionsByProvider = createCachedSelector(
   getTransactionsByProvider,
   (_, props) => props.provider,
   (filteredTransactionsGroupedByCoin) =>
-    filteredTransactionsGroupedByCoin.map((transactions) => transactions.last()),
+    filteredTransactionsGroupedByCoin.map((transactions) =>
+      transactions.last(),
+    ),
 )((_, provider) => provider);
 
 const transactionReducers = {
@@ -49,7 +48,7 @@ const transactionReducers = {
         prevStat.totalCommission + transaction.commission[reportCurrency];
       const totalGain =
         prevStat.totalGain +
-        (transaction.amount * (transaction.price[reportCurrency] - averageCost));
+        transaction.amount * (transaction.price[reportCurrency] - averageCost);
 
       return new TradeStat({
         totalAmount,
@@ -65,7 +64,7 @@ const transactionReducers = {
       const totalAmount = prevStat.totalAmount + transaction.amount;
       const totalCost =
         prevStat.totalCost +
-        (transaction.price[reportCurrency] * transaction.amount);
+        transaction.price[reportCurrency] * transaction.amount;
       const averageCost = totalCost / totalAmount;
       const totalCommission =
         prevStat.totalCommission + transaction.commission[reportCurrency];
@@ -80,10 +79,7 @@ const transactionReducers = {
     },
 
     [tradeActions.DEPOSIT](prevStat, transaction, reportCurrency) {
-      const {
-        averageCost,
-        totalGain,
-      } = prevStat;
+      const { averageCost, totalGain } = prevStat;
       const totalAmount = prevStat.totalAmount + transaction.amount;
       const totalCost = totalAmount * averageCost;
       const totalCommission =
@@ -99,10 +95,7 @@ const transactionReducers = {
     },
 
     [tradeActions.WITHDRAW](prevStat, transaction, reportCurrency) {
-      const {
-        averageCost,
-        totalGain,
-      } = prevStat;
+      const { averageCost, totalGain } = prevStat;
       const totalAmount = prevStat.totalAmount - transaction.amount;
       const totalCost = totalAmount * averageCost;
       const totalCommission =
@@ -119,8 +112,12 @@ const transactionReducers = {
   },
 };
 
-export const makeReportWithStrategy = ({ strategy, transactions, reportCurrency }) => (
-  (Map()).withMutations((mutableMap) => {
+export const makeReportWithStrategy = ({
+  strategy,
+  transactions,
+  reportCurrency,
+}) =>
+  Map().withMutations((mutableMap) => {
     transactions.reduce((prevStat, transaction, key) => {
       const { action } = transaction;
       const stat = transactionReducers[strategy][action](
@@ -132,8 +129,7 @@ export const makeReportWithStrategy = ({ strategy, transactions, reportCurrency 
       mutableMap.set(key, stat);
       return stat;
     }, new TradeStat());
-  })
-);
+  });
 
 export const getReportStrategy = (state) => state.report.strategy;
 
@@ -163,7 +159,8 @@ export const getProviderReport = createCachedSelector(
         transactions,
         strategy,
         reportCurrency,
-      })),
+      }),
+    ),
 )((_, __, ___, provider) => provider);
 
 export const getLastCoinTradeStat = createCachedSelector(
@@ -178,17 +175,15 @@ export const getLastCoinTradeStat = createCachedSelector(
 
 export const getTotalReport = createSelector(
   (state) =>
-    getCoins(state).map((coin) =>
-      getLastCoinTradeStat(state, { coin })),
+    getCoins(state).map((coin) => getLastCoinTradeStat(state, { coin })),
   (stats) =>
     stats.reduce((totalStat, lastTradeStat) =>
       totalStat.withMutations((mutableStat) =>
-        [
-          'totalCost',
-          'totalCommission',
-          'totalGain',
-        ].forEach((key) => mutableStat.set(
-          key,
-          mutableStat.get(key) + lastTradeStat.get(key),
-        ), new TradeStat()))),
+        ['totalCost', 'totalCommission', 'totalGain'].forEach(
+          (key) =>
+            mutableStat.set(key, mutableStat.get(key) + lastTradeStat.get(key)),
+          new TradeStat(),
+        ),
+      ),
+    ),
 );

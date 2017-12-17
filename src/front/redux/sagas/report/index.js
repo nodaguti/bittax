@@ -1,4 +1,11 @@
-import { fork, put, call, take, select, actionChannel } from 'redux-saga/effects';
+import {
+  fork,
+  put,
+  call,
+  take,
+  select,
+  actionChannel,
+} from 'redux-saga/effects';
 import { Map } from 'immutable';
 import { EventEmitter } from 'events';
 import {
@@ -29,15 +36,16 @@ const isPriceFilled = (transaction, reportCurrency) =>
 const fetchPrices = (transactionsGroupedByCoin, reportCurrency) => {
   const emitter = new EventEmitter();
 
-  const total =
-    transactionsGroupedByCoin.reduce((subtotal, transactions) =>
-      subtotal + transactions.size(), 0);
+  const total = transactionsGroupedByCoin.reduce(
+    (subtotal, transactions) => subtotal + transactions.size(),
+    0,
+  );
   let done = 0;
 
   emitter.emit('progress', { total, done });
 
-  const transactionsLackingInPrices =
-    transactionsGroupedByCoin.map((transactions) =>
+  const transactionsLackingInPrices = transactionsGroupedByCoin.map(
+    (transactions) =>
       transactions.filter((transaction) => {
         if (!isPriceFilled(transaction, reportCurrency)) {
           done += 1;
@@ -45,7 +53,8 @@ const fetchPrices = (transactionsGroupedByCoin, reportCurrency) => {
         }
 
         return true;
-      }));
+      }),
+  );
 
   emitter.emit('progress', { total, done });
 
@@ -56,22 +65,28 @@ const fetchPrices = (transactionsGroupedByCoin, reportCurrency) => {
   }
 
   const fetch = (...args) =>
-    api.fetchPriceAt(...args)
-      .then((data) => {
-        done += 1;
-        emitter.emit('progress', { total, done });
-        return data;
-      });
+    api.fetchPriceAt(...args).then((data) => {
+      done += 1;
+      emitter.emit('progress', { total, done });
+      return data;
+    });
 
-  const reqs =
-    transactionsLackingInPrices.map((transactions) =>
-      all(transactions.map((transaction) =>
-        fetch({
-          base: transaction.base,
-          quoted: reportCurrency,
-          provider: transaction.provider,
-          timestamp: transaction.timestamp,
-        })).toObject())).toObject();
+  const reqs = transactionsLackingInPrices
+    .map((transactions) =>
+      all(
+        transactions
+          .map((transaction) =>
+            fetch({
+              base: transaction.base,
+              quoted: reportCurrency,
+              provider: transaction.provider,
+              timestamp: transaction.timestamp,
+            }),
+          )
+          .toObject(),
+      ),
+    )
+    .toObject();
 
   all(reqs).then((results) => emitter.emit('end', results));
 
@@ -80,7 +95,9 @@ const fetchPrices = (transactionsGroupedByCoin, reportCurrency) => {
 
 function* getPricesInReportCurrency() {
   const reportCurrency = yield select(getReportCurrency);
-  const transactionsGroupedByCoin = yield select((state) => state.transactions.coins);
+  const transactionsGroupedByCoin = yield select(
+    (state) => state.transactions.coins,
+  );
   const activityId = `fetching-prices-${Date.now()}`;
   const activityTitle = intl().formatMessage(messages.fetchingPrices);
 
@@ -95,27 +112,27 @@ function* getPricesInReportCurrency() {
 
 function* getCoinReports() {
   const coins = yield select(getCoins);
-  const selects =
-    coins.toArray().map((coin) =>
-      select(getCoinReport, { coin }));
+  const selects = coins
+    .toArray()
+    .map((coin) => select(getCoinReport, { coin }));
   const reports = yield all(selects);
 
-  return (Map()).withMutations((mutableMap) => {
-    coins.forEach((coin, idx) =>
-      mutableMap.set(coin, reports[idx]));
+  return Map().withMutations((mutableMap) => {
+    coins.forEach((coin, idx) => mutableMap.set(coin, reports[idx]));
   });
 }
 
 function* getProviderReports() {
   const providers = yield select(getProviders);
-  const selects =
-    providers.toArray().map((provider) =>
-      select(getProviderReport, { provider }));
+  const selects = providers
+    .toArray()
+    .map((provider) => select(getProviderReport, { provider }));
   const reports = yield all(selects);
 
-  return (Map()).withMutations((mutableMap) => {
+  return Map().withMutations((mutableMap) => {
     providers.forEach((provider, idx) =>
-      mutableMap.set(provider, reports[idx]));
+      mutableMap.set(provider, reports[idx]),
+    );
   });
 }
 
@@ -138,11 +155,15 @@ function* makeReport() {
       call(getProviderReports),
     ]);
 
-    yield put(completedMakingReport(Map({
-      total,
-      coins,
-      providers,
-    })));
+    yield put(
+      completedMakingReport(
+        Map({
+          total,
+          coins,
+          providers,
+        }),
+      ),
+    );
   } catch (ex) {
     emitError({
       name: intl().formatMessage(messages.makingReportFailed),
