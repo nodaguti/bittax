@@ -7,7 +7,7 @@ import {
   emitError,
 } from '../../actions';
 import APIs from '../../../api';
-import fetchWithRequestHandling from '../utils';
+import { fetchWithRequestHandling } from '../utils';
 import { getProviderName } from '../../../providers';
 import {
   getFetchedAt,

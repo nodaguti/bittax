@@ -48,9 +48,12 @@
   "redux.sagas.oauth.connectionError": "Connection Error",
   "redux.sagas.oauth.connectionErrorMessage": "{provider} has been disconnected. Please connect it again at /sources.",
   "redux.sagas.oauth.targetWindowClosed": "Saving authentication data has been failed. Did you close the original Bittax's window/tab?",
-  "redux.sagas.transactions.connectionError": "Connection Error",
-  "redux.sagas.transactions.connectionErrorMessage": "Fetching transaction data from {provider} has been failed. The provider's server might down.",
-  "redux.sagas.transactions.fetchDeposits": "{provider}: Fetching deposit histories",
-  "redux.sagas.transactions.fetchTrades": "{provider}: Fetching trade histories",
-  "redux.sagas.transactions.fetchWithdrawals": "{provider}: Fetching withdrawal histories"
+  "redux.sagas.report.fetchingPrices": "Fetching missing price data",
+  "redux.sagas.report.makingReportFailed": "Internal Error",
+  "redux.sagas.report.makingReportFailedMessage": "Making the trade report has been failed.",
+  "redux.sagas.transaction.connectionError": "Connection Error",
+  "redux.sagas.transaction.connectionErrorMessage": "Fetching transaction data from {provider} has been failed. The provider's server might down.",
+  "redux.sagas.transaction.fetchDeposits": "{provider}: Fetching deposit histories",
+  "redux.sagas.transaction.fetchTrades": "{provider}: Fetching trade histories",
+  "redux.sagas.transaction.fetchWithdrawals": "{provider}: Fetching withdrawal histories"
 }

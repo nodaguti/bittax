@@ -150,9 +150,9 @@ export const getCoinReport = createCachedSelector(
       strategy,
       reportCurrency,
     }),
-)((_, strategy, reportCurrency, coin) => `${coin}-${strategy}-${reportCurrency}`);
+)((_, __, ___, coin) => coin);
 
-export const getProviderReport = createSelector(
+export const getProviderReport = createCachedSelector(
   getTransactionsByProvider,
   getReportStrategy,
   getReportCurrency,
@@ -164,7 +164,7 @@ export const getProviderReport = createSelector(
         strategy,
         reportCurrency,
       })),
-);
+)((_, __, ___, provider) => provider);
 
 export const getLastCoinTradeStat = createCachedSelector(
   getCoinReport,

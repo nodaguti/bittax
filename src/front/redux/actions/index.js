@@ -21,8 +21,19 @@ export const refreshOAuthToken = createAction(REFRESH_OAUTH_TOKEN);
 
 export const FETCH_TRANSACTIONS = 'FETCH_TRANSACTIONS';
 export const TRANSACTIONS_FETCHED = 'TRANSACTIONS_FETCHED';
+export const FETCHED_PRICES_IN_REPORT_CURRENCY = 'FETCHED_PRICES_IN_REPORT_CURRENCY';
 export const fetchTransactions = createAction(FETCH_TRANSACTIONS);
 export const transactionsFetched = createAction(TRANSACTIONS_FETCHED);
+export const fetchedPricesInReportCurrency = createAction(FETCHED_PRICES_IN_REPORT_CURRENCY);
+
+export const SET_STRATEGY = 'SET_STRATEGY';
+export const SET_REPORT_CURRENCY = 'SET_REPORT_CURRENCY';
+export const MAKE_REPORT = 'MAKE_REPORT';
+export const COMPLETED_MAKING_REPORT = 'COMPLETED_MAKING_REPORT';
+export const setStrategy = createAction(SET_STRATEGY);
+export const setReportCurrency = createAction(SET_REPORT_CURRENCY);
+export const makeReport = createAction(MAKE_REPORT);
+export const completedMakingReport = createAction(COMPLETED_MAKING_REPORT);
 
 export const APPEND_NOTIFICATION = 'APPEND_NOTIFICATION';
 export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION';

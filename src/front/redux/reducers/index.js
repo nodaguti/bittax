@@ -5,6 +5,7 @@ import storage from 'redux-persist/es/storage';
 import * as records from '../../records';
 import oauth from './oauth';
 import transactions from './transactions';
+import report from './report';
 import notifications from './notifications';
 import activities from './activities';
 import locale from './locale';
@@ -20,6 +21,7 @@ const persistConfig = {
 export default persistReducer(persistConfig, combineReducers({
   oauth,
   transactions,
+  report,
   notifications,
   activities,
   locale,

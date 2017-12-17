@@ -1,4 +1,8 @@
 import { Record, Map } from 'immutable';
+import {
+  strategies,
+  reportCurrencies,
+} from '../constants';
 
 export const ImmutableError = new Record({
   name: '',
@@ -41,12 +45,8 @@ export const Transaction = new Record({
   quoted: '',
   action: '', // constants.tradeActions
   amount: 0,
-  price: {
-    jpy: 0,
-  },
-  commission: {
-    jpy: 0,
-  },
+  price: Map(), // [currency]: price
+  commission: Map(), // [currency]: amount
   address: '',
 }, 'transaction');
 
@@ -59,9 +59,15 @@ export const TradeStat = new Record({
 }, 'trade-stat');
 
 export const Report = new Record({
-  strategy: '', // constants.strategies
-  reportCurrency: '',
+  strategy: strategies.MOVING_AVERAGE,
+  reportCurrency: reportCurrencies.JPY,
+  processing: false,
   total: new TradeStat(), // Only total{Cost, Commission, Gain} are to be used.
   coins: Map(), // [coin]: Map<[transactionKey]: TradeStat>
   providers: Map(), // [providerId]: Map<[coin]: Map<[transactionKey]: TradeStat>>
+  unrealised: {
+    total: 0,
+    coins: Map(), // [coin]: unrealisedGain
+    providers: Map(), // [providerId]: unrealisedGain,
+  },
 }, 'report');

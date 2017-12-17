@@ -11,3 +11,7 @@ export const tradeActions = {
   WITHDRAW: 'WITHDRAW',
   DEPOSIT: 'DEPOSIT',
 };
+
+export const reportCurrencies = {
+  JPY: 'jpy',
+};

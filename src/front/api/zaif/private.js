@@ -49,12 +49,13 @@ export default class Private {
         quoted,
         action: tradeActions[trade.action.toUpperCase()],
         amount: trade.amount,
-        price: {
+        price: Map({
+          [base]: 1,
           [quoted]: trade.price,
-        },
-        commission: {
+        }),
+        commission: Map({
           [base]: trade.fee - trade.bonus,
-        },
+        }),
       })));
   }
 
@@ -137,6 +138,12 @@ export default class Private {
         base: currency,
         action: tradeActions.WITHDRAW,
         amount: withdrawal.amount,
+        price: Map({
+          [currency]: 1,
+        }),
+        commission: Map({
+          [currency]: 0,
+        }),
         address: withdrawal.address,
       })));
   }
@@ -209,6 +216,12 @@ export default class Private {
         base: currency,
         action: tradeActions.DEPOSIT,
         amount: deposit.amount,
+        price: Map({
+          [currency]: 1,
+        }),
+        commission: Map({
+          [currency]: 0,
+        }),
         address: deposit.address,
       })));
   }

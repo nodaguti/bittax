@@ -36,9 +36,12 @@
   "redux.sagas.oauth.connectionError": "通信エラー",
   "redux.sagas.oauth.connectionErrorMessage": "{provider} との連携が解除されました。連携をやり直してください。",
   "redux.sagas.oauth.targetWindowClosed": "認証情報の保存に失敗しました。元のウィンドウ/タブが閉じられているようです。",
-  "redux.sagas.transactions.connectionError": "通信エラー",
-  "redux.sagas.transactions.connectionErrorMessage": "{provider} からの履歴取得に失敗しました。相手サーバが落ちているかもしれません。",
-  "redux.sagas.transactions.fetchDeposits": "{provider}: 入金履歴取得中",
-  "redux.sagas.transactions.fetchTrades": "{provider}: 取引履歴取得中",
-  "redux.sagas.transactions.fetchWithdrawals": "{provider}: 出金履歴取得中"
+  "redux.sagas.report.fetchingPrices": "取引時の価格を取得中",
+  "redux.sagas.report.makingReportFailed": "エラー",
+  "redux.sagas.report.makingReportFailedMessage": "レポートの作成中にエラーが発生しました。",
+  "redux.sagas.transaction.connectionError": "通信エラー",
+  "redux.sagas.transaction.connectionErrorMessage": "{provider} からの履歴取得に失敗しました。相手サーバが落ちているかもしれません。",
+  "redux.sagas.transaction.fetchDeposits": "{provider}: 入金履歴取得中",
+  "redux.sagas.transaction.fetchTrades": "{provider}: 取引履歴取得中",
+  "redux.sagas.transaction.fetchWithdrawals": "{provider}: 出金履歴取得中"
 }

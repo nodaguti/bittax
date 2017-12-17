@@ -1,5 +1,8 @@
 import { Map, OrderedMap } from 'immutable';
-import { TRANSACTIONS_FETCHED } from '../actions';
+import {
+  TRANSACTIONS_FETCHED,
+  FETCHED_PRICES_IN_REPORT_CURRENCY,
+} from '../actions';
 import { Transaction } from '../../records';
 
 const initialState = Map({
@@ -51,6 +54,29 @@ const reducers = {
           },
         );
       });
+    });
+  },
+
+  [FETCHED_PRICES_IN_REPORT_CURRENCY](state, { pricesGroupedByCoin, currency }) {
+    return state.withMutations((mutableState) => {
+      Object.entries(pricesGroupedByCoin).forEach(([coin, prices]) =>
+        Object.entries(prices).forEach(([transactionKey, price]) => {
+          const transaction = state.coins.get(transactionKey);
+          const { base } = transaction;
+
+          mutableState.setIn(
+            ['coins', coin, transactionKey, 'price', currency],
+            price,
+          );
+
+          mutableState.updateIn(
+            ['coins', coin, transactionKey, 'commission'],
+            (commission) => commission.set(
+              currency,
+              commission.get(base) * price,
+            ),
+          );
+        }));
     });
   },
 };

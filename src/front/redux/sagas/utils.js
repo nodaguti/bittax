@@ -20,8 +20,13 @@ function createProgressChannel([context, func], ...args) {
   });
 }
 
-export default function* fetchWithRequestHandling({ id, title }, [context, func], ...args) {
+export function* fetchWithRequestHandling({ id, title }, contextAndFunc, ...args) {
   yield put(appendActivity({ id, title }));
+
+  const [
+    context,
+    func,
+  ] = Array.isArray(contextAndFunc) ? contextAndFunc : [null, contextAndFunc];
 
   const progressChannel = yield call(createProgressChannel, [context, func], ...args);
 
@@ -42,4 +47,15 @@ export default function* fetchWithRequestHandling({ id, title }, [context, func]
   } finally {
     yield put(removeActivity(id));
   }
+}
+
+export async function all(keyToPromiseMap) {
+  const keys = Object.keys(keyToPromiseMap);
+  const promises = Object.values(keyToPromiseMap);
+  const results = await Promise.all(promises);
+  const resultsObj = {};
+
+  results.forEach((result, i) => { resultsObj[keys[i]] = result; });
+
+  return resultsObj;
 }
