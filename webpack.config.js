@@ -1,6 +1,7 @@
-const webpack = require('webpack');
-const MinifyPlugin = require('babel-minify-webpack-plugin');
 const path = require('path');
+const webpack = require('webpack');
+const removeConsoleBabelPlugin = require('babel-plugin-transform-remove-console');
+const MinifyWebpackPlugin = require('babel-minify-webpack-plugin');
 
 module.exports = {
   entry: path.join(__dirname, 'src', 'front', 'index.jsx'),
@@ -34,8 +35,15 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        query: { cacheDirectory: true },
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true,
+            plugins: [
+              removeConsoleBabelPlugin,
+            ],
+          },
+        },
       },
     ],
   },
@@ -50,7 +58,7 @@ module.exports = {
 
     if (process.env.NODE_ENV !== 'development') {
       return basePlugins.concat([
-        new MinifyPlugin({
+        new MinifyWebpackPlugin({
           mangle: { topLevel: true },
         }),
       ]);

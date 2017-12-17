@@ -1,12 +1,22 @@
 {
   "root": true,
-  "extends": "airbnb",
   "parser": "babel-eslint",
   "settings": {
     "import/resolver": "webpack"
   },
+  "plugins": [
+    "redux-saga",
+    "ava"
+  ],
+  "extends": [
+    "airbnb",
+    "plugin:redux-saga/recommended",
+    "plugin:ava/recommended",
+    "prettier"
+  ],
   "rules": {
     "arrow-parens": ["error", "always"],
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    "redux-saga/no-unhandled-errors": 0
   }
 }
