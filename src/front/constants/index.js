@@ -10,6 +10,7 @@ export const tradeActions = {
   ASK: 'ASK',
   WITHDRAW: 'WITHDRAW',
   DEPOSIT: 'DEPOSIT',
+  UNKNOWN: 'UNKNOWN',
 };
 
 export const reportCurrencies = {

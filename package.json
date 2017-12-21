@@ -46,6 +46,7 @@
     "uuid": "^3.1.0"
   },
   "devDependencies": {
+    "ava": "^0.24.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.2",
@@ -58,6 +59,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.26.0",
     "cpr": "^3.0.1",
     "cross-env": "^5.0.0",
     "eslint": "^4.11.0",
@@ -84,9 +86,19 @@
     "clean": "rimraf lib dist",
     "copy": "npm-run-all copy:*",
     "copy:index": "cpr index.html dist/",
-    "lint": "eslint \"src/**/*.{js,jsx}\"",
-    "prettier": "prettier --write \"src/**/*.{js,jsx}\"",
+    "lint": "eslint \"{src,tests}/**/*.{js,jsx}\"",
+    "prettier": "prettier --write \"{src,tests}/**/*.{js,jsx}\"",
+    "test": "cross-env BABEL_ENV=test ava",
     "start": "npm-run-all start:server",
     "start:server": "node lib/server.js"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.test.js"
+    ],
+    "require": [
+      "babel-register"
+    ],
+    "babel": "inherit"
   }
 }

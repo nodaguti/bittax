@@ -30,8 +30,8 @@ import messages from './messages';
 const api = APIs.cryptoCompare.public;
 
 const isPriceFilled = (transaction, reportCurrency) =>
-  Number.isFinite(transaction.price[reportCurrency]) &&
-  Number.isFinite(transaction.commission[reportCurrency]);
+  Number.isFinite(transaction.price.get(reportCurrency)) &&
+  Number.isFinite(transaction.commission.get(reportCurrency));
 
 const fetchPrices = (transactionsGroupedByCoin, reportCurrency) => {
   const emitter = new EventEmitter();

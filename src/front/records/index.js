@@ -1,5 +1,5 @@
 import { Record, Map } from 'immutable';
-import { strategies, reportCurrencies } from '../constants';
+import { strategies, reportCurrencies, tradeActions } from '../constants';
 
 export const ImmutableError = new Record(
   {
@@ -53,7 +53,8 @@ export const Transaction = new Record(
     timestamp: 0, // Unix Timestamp [ms]
     base: '',
     quoted: '',
-    action: '', // constants.tradeActions
+    action: tradeActions.UNKNOWN, // constants.tradeActions
+    isTransfer: false,
     amount: 0,
     price: Map(), // [currency]: price
     commission: Map(), // [currency]: amount

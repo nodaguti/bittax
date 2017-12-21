@@ -27,7 +27,7 @@ export const getTransactionsByProvider = createCachedSelector(
     transactionsGroupedByCoin.map((transactions) =>
       transactions.filter((transaction) => transaction.provider === provider),
     ),
-)((_, provider) => provider);
+)((_, props) => props.provider);
 
 export const getLastTransactionsByProvider = createCachedSelector(
   getTransactionsByProvider,
@@ -38,6 +38,10 @@ export const getLastTransactionsByProvider = createCachedSelector(
     ),
 )((_, provider) => provider);
 
+// While `Number.toFixed` returns a string representation of a fixed number,
+// this method returns a number.
+const toFixed = (number, digits) => Number(number.toFixed(digits));
+
 const transactionReducers = {
   [strategies.MOVING_AVERAGE]: {
     [tradeActions.ASK](prevStat, transaction, reportCurrency) {
@@ -45,17 +49,19 @@ const transactionReducers = {
       const totalAmount = prevStat.totalAmount - transaction.amount;
       const totalCost = averageCost * totalAmount;
       const totalCommission =
-        prevStat.totalCommission + transaction.commission[reportCurrency];
+        prevStat.totalCommission + transaction.commission.get(reportCurrency);
       const totalGain =
         prevStat.totalGain +
-        transaction.amount * (transaction.price[reportCurrency] - averageCost);
+        transaction.amount *
+          (transaction.price.get(reportCurrency) - averageCost);
 
+      // TODO: digits should be configurable
       return new TradeStat({
-        totalAmount,
-        averageCost,
-        totalCost,
-        totalCommission,
-        totalGain,
+        totalAmount: toFixed(totalAmount, 5),
+        averageCost: toFixed(averageCost, 5),
+        totalCost: toFixed(totalCost, 5),
+        totalCommission: toFixed(totalCommission, 5),
+        totalGain: toFixed(totalGain, 5),
       });
     },
 
@@ -64,50 +70,62 @@ const transactionReducers = {
       const totalAmount = prevStat.totalAmount + transaction.amount;
       const totalCost =
         prevStat.totalCost +
-        transaction.price[reportCurrency] * transaction.amount;
+        transaction.price.get(reportCurrency) * transaction.amount;
       const averageCost = totalCost / totalAmount;
       const totalCommission =
-        prevStat.totalCommission + transaction.commission[reportCurrency];
+        prevStat.totalCommission + transaction.commission.get(reportCurrency);
 
       return new TradeStat({
-        totalAmount,
-        averageCost,
-        totalCost,
-        totalCommission,
-        totalGain,
+        totalAmount: toFixed(totalAmount, 5),
+        averageCost: toFixed(averageCost, 5),
+        totalCost: toFixed(totalCost, 5),
+        totalCommission: toFixed(totalCommission, 5),
+        totalGain: toFixed(totalGain, 5),
       });
     },
 
     [tradeActions.DEPOSIT](prevStat, transaction, reportCurrency) {
-      const { averageCost, totalGain } = prevStat;
-      const totalAmount = prevStat.totalAmount + transaction.amount;
-      const totalCost = totalAmount * averageCost;
-      const totalCommission =
-        prevStat.totalCommission + transaction.commission[reportCurrency];
+      const depositAsTransfer = () => {
+        const { averageCost, totalGain, totalAmount, totalCost } = prevStat;
+        const totalCommission =
+          prevStat.totalCommission + transaction.commission.get(reportCurrency);
 
-      return new TradeStat({
-        totalAmount,
-        averageCost,
-        totalCost,
-        totalCommission,
-        totalGain,
-      });
+        return new TradeStat({
+          totalAmount: toFixed(totalAmount, 5),
+          averageCost: toFixed(averageCost, 5),
+          totalCost: toFixed(totalCost, 5),
+          totalCommission: toFixed(totalCommission, 5),
+          totalGain: toFixed(totalGain, 5),
+        });
+      };
+
+      const depositAsGift = () =>
+        this[tradeActions.BID](prevStat, transaction, reportCurrency);
+
+      return transaction.isTransfer ? depositAsTransfer() : depositAsGift();
     },
 
     [tradeActions.WITHDRAW](prevStat, transaction, reportCurrency) {
-      const { averageCost, totalGain } = prevStat;
-      const totalAmount = prevStat.totalAmount - transaction.amount;
-      const totalCost = totalAmount * averageCost;
-      const totalCommission =
-        prevStat.totalCommission + transaction.commission[reportCurrency];
+      const withdrawAsTransfer = () => {
+        const { averageCost, totalGain, totalAmount, totalCost } = prevStat;
+        const totalCommission =
+          prevStat.totalCommission + transaction.commission.get(reportCurrency);
 
-      return new TradeStat({
-        totalAmount,
-        averageCost,
-        totalCost,
-        totalCommission,
-        totalGain,
-      });
+        return new TradeStat({
+          totalAmount: toFixed(totalAmount, 5),
+          averageCost: toFixed(averageCost, 5),
+          totalCost: toFixed(totalCost, 5),
+          totalCommission: toFixed(totalCommission, 5),
+          totalGain: toFixed(totalGain, 5),
+        });
+      };
+
+      const withdrawAsPurchase = () =>
+        this[tradeActions.ASK](prevStat, transaction, reportCurrency);
+
+      return transaction.isTransfer
+        ? withdrawAsTransfer()
+        : withdrawAsPurchase();
     },
   },
 };
@@ -139,20 +157,18 @@ export const getCoinReport = createCachedSelector(
   getTransactionsByCoin,
   getReportStrategy,
   getReportCurrency,
-  (_, props) => props.coin,
   (transactions, strategy, reportCurrency) =>
     makeReportWithStrategy({
       transactions,
       strategy,
       reportCurrency,
     }),
-)((_, __, ___, coin) => coin);
+)((_, props) => props.coin);
 
 export const getProviderReport = createCachedSelector(
   getTransactionsByProvider,
   getReportStrategy,
   getReportCurrency,
-  (_, props) => props.provider,
   (filteredTransactionsGroupedByCoin, strategy, reportCurrency) =>
     filteredTransactionsGroupedByCoin.map((transactions) =>
       makeReportWithStrategy({
@@ -161,17 +177,16 @@ export const getProviderReport = createCachedSelector(
         reportCurrency,
       }),
     ),
-)((_, __, ___, provider) => provider);
+)((_, props) => props.provider);
 
 export const getLastCoinTradeStat = createCachedSelector(
   getCoinReport,
   (state, props) => state.transactions.coins.get(props.coin),
-  (_, props) => props.coin,
   (tradeStats, transactions) => {
     const lastKey = transactions.keySeq().last();
     return tradeStats.get(lastKey);
   },
-)((_, __, coin) => coin);
+)((_, props) => props.coin);
 
 export const getTotalReport = createSelector(
   (state) =>
