@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import immutableTransform from 'redux-persist-transform-immutable';
+import createCompressor from 'redux-persist-transform-compress';
 import storage from 'redux-persist/es/storage';
 import * as records from '../../records';
 import oauth from './oauth';
@@ -12,7 +13,10 @@ import locale from './locale';
 import error from './error';
 
 const persistConfig = {
-  transforms: [immutableTransform({ records: Object.values(records) })],
+  transforms: [
+    immutableTransform({ records: Object.values(records) }),
+    createCompressor(),
+  ],
   key: 'root',
   storage,
   blacklist: ['error', 'notifications', 'activities'],
