@@ -35,7 +35,7 @@ const Link = styled(({ children, ...props }) => (
   };
 
   if (props.active) {
-    styles = Object.assign({}, styles, { ...indicator });
+    styles = { ...styles, ...indicator };
   }
 
   return styles;

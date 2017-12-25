@@ -16,7 +16,7 @@ const enqueueFetch = (url, { params, ...opts } = {}, isPrivate = false) => {
     const n = nonce.next() / 1e14;
 
     // eslint-disable-next-line no-param-reassign
-    params = Object.assign({}, params, { nonce: n });
+    params = { ...params, nonce: n };
   }
 
   if (params) {
