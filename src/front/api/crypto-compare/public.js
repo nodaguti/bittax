@@ -43,42 +43,64 @@ export default class Public {
       return Promise.resolve(price);
     }
 
-    const data = await fetch(
-      'https://min-api.cryptocompare.com/data/histohour',
-      {
-        params: {
-          fsym: base.toUpperCase(base),
-          tsym: quoted.toUpperCase(quoted),
-          limit: 24,
-          toTs: hourlyFlooredUnixTimestamp,
-          e: provider,
+    try {
+      const data = await fetch(
+        'https://min-api.cryptocompare.com/data/histohour',
+        {
+          params: {
+            fsym: base.toUpperCase(base),
+            tsym: quoted.toUpperCase(quoted),
+            limit: 24,
+            toTs: hourlyFlooredUnixTimestamp,
+            e: provider,
+          },
         },
-      },
-    );
+      );
 
-    const pricesAtTheTime = last(data);
+      const pricesAtTheTime = last(data);
 
-    if (pricesAtTheTime.time !== hourlyFlooredUnixTimestamp) {
-      const humanReadableTimestamp = moment(timestamp).format();
-      const humanReadableHourlyFlooredUnixTimestamp = moment()
-        .unix(hourlyFlooredUnixTimestamp)
-        .format();
-      const args = {
-        base,
-        quoted,
-        provider,
-        timestamp,
-        humanReadableTimestamp,
-        hourlyFlooredUnixTimestamp,
-        humanReadableHourlyFlooredUnixTimestamp,
-      };
+      if (pricesAtTheTime.time !== hourlyFlooredUnixTimestamp) {
+        const humanReadableTimestamp = moment(timestamp).format();
+        const humanReadableHourlyFlooredUnixTimestamp = moment()
+          .unix(hourlyFlooredUnixTimestamp)
+          .format();
+        const args = {
+          base,
+          quoted,
+          provider,
+          timestamp,
+          humanReadableTimestamp,
+          hourlyFlooredUnixTimestamp,
+          humanReadableHourlyFlooredUnixTimestamp,
+        };
 
-      console.error('No data available', args, data);
-      throw new Error('No data available');
+        console.error('No data available', args, data);
+        throw new Error('No data available');
+      }
+
+      cache.set({ base, quoted, data });
+
+      return pricesAtTheTime.close;
+    } catch (ex) {
+      const retryableErrors = [
+        'e param is not valid the market does not exist for this coin pair',
+        'No data available',
+      ];
+      const aggregatedMarket = 'CCCAGG';
+
+      if (
+        provider !== aggregatedMarket &&
+        retryableErrors.includes(ex.message)
+      ) {
+        return Public.fetchPriceAt({
+          base,
+          quoted,
+          timestamp,
+          provider: aggregatedMarket,
+        });
+      }
+
+      throw ex;
     }
-
-    cache.set({ base, quoted, data });
-
-    return pricesAtTheTime.close;
   }
 }
