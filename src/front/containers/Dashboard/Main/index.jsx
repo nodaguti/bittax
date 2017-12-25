@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Panel, PanelHead, Flex, Box, Subhead } from 'rebass';
 
@@ -34,23 +34,13 @@ const ProviderPortfolio = () => {
   );
 };
 
-class ProviderDashboard extends Component {
-  componentWillMount() {
-    this.props.dispatch();
-  }
-
-  render() {
-    const { transactions } = this.props;
-
-    return (
-      <Box>
-        <TotalGainTable />
-        <AssetTransition transactions={transactions} />
-        <AssetPortfolio transactions={transactions} />
-        <ProviderPortfolio transactions={transactions} />
-      </Box>
-    );
-  }
-}
+const ProviderDashboard = ({ transactions }) => (
+  <Box>
+    <TotalGainTable />
+    <AssetTransition transactions={transactions} />
+    <AssetPortfolio transactions={transactions} />
+    <ProviderPortfolio transactions={transactions} />
+  </Box>
+);
 
 export default ProviderDashboard;

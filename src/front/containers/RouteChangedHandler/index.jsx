@@ -1,17 +1,13 @@
-import { Component } from 'react';
 import { connect } from 'react-redux';
+import { compose, withPropsOnChange, onlyUpdateForKeys } from 'recompose';
 import { routeChanged } from '../../redux/actions';
 
-class RouteChangedHandler extends Component {
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.location !== this.props.location) {
-      this.props.dispatch(routeChanged({ location: nextProps.location }));
-    }
-  }
+const RouteChangedHandler = compose(
+  connect(),
+  withPropsOnChange(['location', 'dispatch'], ({ location, dispatch }) => {
+    dispatch(routeChanged({ location }));
+  }),
+  onlyUpdateForKeys(['location']),
+)(() => null);
 
-  render() {
-    return null;
-  }
-}
-
-export default connect()(RouteChangedHandler);
+export default RouteChangedHandler;

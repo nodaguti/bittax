@@ -34,6 +34,7 @@
     "react-router-dom": "^4.1.1",
     "rebass": "^1.0.4",
     "recharts": "^1.0.0-alpha.0",
+    "recompose": "^0.26.0",
     "redux": "^3.6.0",
     "redux-actions": "^2.2.1",
     "redux-devtools-extension": "^2.13.2",

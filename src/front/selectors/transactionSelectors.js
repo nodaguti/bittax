@@ -4,6 +4,11 @@ import { Map } from 'immutable';
 import { TradeStat } from '../records';
 import { tradeActions, strategies } from '../constants';
 
+export const isTransactionsEmpty = createSelector(
+  (state) => state.transactions.coins,
+  (coins) => coins.isEmpty(),
+);
+
 export const getCoins = createSelector(
   (state) => state.transactions.coins,
   (coins) => coins.keySeq(),

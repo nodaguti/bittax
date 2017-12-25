@@ -46,6 +46,14 @@ export const OAuthToken = new Record(
   'oauth-token',
 );
 
+export const TransactionsStore = new Record(
+  {
+    fetchedAt: Map(), // [provider]: fetchedTimestamp
+    coins: Map(), // [coin]: OrderedMap<Transaction>
+  },
+  'transactions-store',
+);
+
 export const Transaction = new Record(
   {
     provider: '',

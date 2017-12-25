@@ -7,7 +7,7 @@ import providers from '../../providers';
 import { Transaction } from '../../records';
 import { tradeActions } from '../../constants';
 
-const providerId = providers.zaif.id;
+const providerId = providers.get('zaif').id;
 
 export default class Private {
   token = null;

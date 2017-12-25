@@ -1,10 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
+import { compose, withProps } from 'recompose';
 
-class SourceImporter extends Component {
-  render() {
-    return <div>{this.props.provider}</div>;
-  }
-}
+const SourceImporter = compose(
+  connect(),
+  withProps((props) => ({
+    provider: props.match.params.provider,
+  })),
+)(({ provider }) => (
+  <div>Please drag & drop the CSV files obtained from {provider}.</div>
+));
 
-export default connect()(SourceImporter);
+export default SourceImporter;

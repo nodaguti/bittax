@@ -1,14 +1,11 @@
-import { Map, OrderedMap } from 'immutable';
+import { OrderedMap } from 'immutable';
 import {
   TRANSACTIONS_FETCHED,
   FETCHED_PRICES_IN_REPORT_CURRENCY,
 } from '../actions';
-import { Transaction } from '../../records';
+import { TransactionsStore, Transaction } from '../../records';
 
-const initialState = Map({
-  fetchedAt: Map(), // [provider]: fetchedTimestamp
-  coins: Map(), // [coin]: OrderedMap<Transaction>
-});
+const initialState = new TransactionsStore();
 
 const reducers = {
   [TRANSACTIONS_FETCHED](

@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
+import { compose, withProps } from 'recompose';
 
-class ApiIntegrator extends Component {
-  render() {
-    return <div>Please input the API key of {this.props.provider}</div>;
-  }
-}
+const ApiIntegrator = compose(
+  connect(),
+  withProps((props) => ({
+    provider: props.match.params.provider,
+  })),
+)(({ provider }) => <div>Please input the API key of {provider}</div>);
 
-export default connect()(ApiIntegrator);
+export default ApiIntegrator;

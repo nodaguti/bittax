@@ -67,12 +67,7 @@ const App = () => (
                       exact
                       component={Dashboard}
                     />
-                    <Route
-                      path="/sources"
-                      exact
-                      strict
-                      component={SourceList}
-                    />
+                    <Route path="/sources" exact strict render={SourceList} />
                     <Route
                       path="/sources/add/:provider"
                       exact
